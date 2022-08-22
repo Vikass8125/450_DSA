@@ -1,0 +1,144 @@
+Given an array, rotate the array by one position in clock-wise direction.
+ 
+
+Example 1:
+
+Input:
+N = 5
+A[] = {1, 2, 3, 4, 5}
+Output:
+5 1 2 3 4
+ 
+
+Example 2:
+
+Input:
+N = 8
+A[] = {9, 8, 7, 6, 4, 2, 1, 3}
+Output:
+3 9 8 7 6 4 2 1
+ 
+
+Your Task:  
+You don't need to read input or print anything. Your task is to complete the function rotate() which takes the array A[] 
+and its size N as inputs and modify the array in place.
+
+ 
+
+Expected Time Complexity: O(N)
+Expected Auxiliary Space: O(1)
+
+ 
+
+Constraints:
+1<=N<=105
+0<=a[i]<=105
+
+
+MY_SOLUTION
+
+class Compute {
+    
+    public void rotate(int arr[], int n)
+    {
+        int temp = arr[n - 1];
+        
+        for(int i = n - 2; i >= 0; i--){
+            arr[i + 1] = arr[i];
+        }
+        
+        arr[0] = temp;
+    }
+}
+
+===========================================
+
+Following are steps. 
+1) Store last element in a variable say x. 
+2) Shift all elements one position ahead. 
+3) Replace first element of array with x.
+ 
+
+
+import java.util.Arrays;
+ 
+public class Test
+{
+    static int arr[] = new int[]{1, 2, 3, 4, 5};
+     
+    // Method for rotation
+    static void rotate()
+    {
+       int x = arr[arr.length-1], i;
+       for (i = arr.length-1; i > 0; i--)
+          arr[i] = arr[i-1];
+       arr[0] = x;
+    }
+     
+    /* Driver program */
+    public static void main(String[] args)
+    {
+        System.out.println("Given Array is");
+        System.out.println(Arrays.toString(arr));
+         
+        rotate();
+         
+        System.out.println("Rotated Array is");
+        System.out.println(Arrays.toString(arr));
+    }
+}
+Output
+Given array is 
+1 2 3 4 5 
+
+Rotated array is
+5 1 2 3 4 
+Time Complexity: O(n), as we need to iterate through all the elements. Where n is the number of elements in the array.
+Auxiliary Space: O(1), as we are using constant space.
+The above question can also be solved by using reversal algorithm.
+
+Another approach:
+
+We can use two pointers, say i and j which point to first and last element of array respectively. 
+As we know in cyclic rotation we will bring last element to first and shift rest in forward direction, so start swaping arr[i] and arr[j] and
+keep j fixed and i moving towards j.  Repeat till i is not equal to j.
+
+
+import java.util.Arrays;
+ 
+public class Test
+{
+    static int arr[] = new int[]{1, 2, 3, 4, 5};
+     
+    
+    static void rotate()
+    {
+       int i = 0, j = arr.length - 1;
+       while(i != j)
+       {
+         int temp = arr[i];
+         arr[i] = arr[j];
+         arr[j] = temp;
+         i++;
+       }
+    }
+     
+    /* Driver program */
+    public static void main(String[] args)
+    {
+        System.out.println("Given Array is");
+        System.out.println(Arrays.toString(arr));
+         
+        rotate();
+         
+        System.out.println("Rotated Array is");
+        System.out.println(Arrays.toString(arr));
+    }
+}
+Output
+Given array is 
+1 2 3 4 5 
+Rotated array is
+5 1 2 3 4 
+Time Complexity: O(n), as we need to iterate through all the elements. Where n is the number of elements in the array.
+Auxiliary Space: O(1), as we are using constant space.
