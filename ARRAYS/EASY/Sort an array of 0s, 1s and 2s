@@ -1,0 +1,355 @@
+Given an array of size N containing only 0s, 1s, and 2s; sort the array in ascending order.
+
+
+Example 1:
+
+Input: 
+N = 5
+arr[]= {0 2 1 2 0}
+Output:
+0 0 1 2 2
+Explanation:
+0s 1s and 2s are segregated 
+into ascending order.
+Example 2:
+
+Input: 
+N = 3
+arr[] = {0 1 0}
+Output:
+0 0 1
+Explanation:
+0s 1s and 2s are segregated 
+into ascending order.
+
+Your Task:
+You don't need to read input or print anything. Your task is to complete the function sort012() that takes an 
+array arr and N as input parameters and sorts the array in-place.
+
+
+Expected Time Complexity: O(N)
+Expected Auxiliary Space: O(1)
+
+
+Constraints:
+1 <= N <= 10^6
+0 <= A[i] <= 2
+
+
+MY_SOLUTION
+
+This problem is a variation of the popular Dutch National flag algorithm 
+
+Intuition: In this approach, we will be using 3 pointers named low, mid, and high. We will be using these 3 pointers to move around the values.
+The primary goal here is to move 0s to the left and 2s to the right of the array and at the same time all the 1s shall be in the middle region of 
+the array and hence the array will be sorted. 
+
+Approach: 
+
+Initialize the 3 pointers such that low and mid will point to 0th index and high pointer will point to last index
+int low = arr[0]
+
+int mid = arr[0]
+
+int high = arr[n – 1]
+
+Now there will 3 different operations / steps based on the value of arr[mid] and will be repeated until mid <= high.
+
+arr[mid] == 0:
+swap(arr[low], arr[mid])
+low++, mid++
+
+arr[mid] == 1:
+mid++
+
+arr[mid] == 2:
+swap(arr[mid], arr[high])
+high–;
+The array formed after these steps will be a sorted array.
+
+Time Complexity: O(N)
+
+Space Complexity: O(1)
+
+============================================
+
+class Solution
+{
+    public static void sort012(int a[], int n)
+    {
+        // code here 
+        // APPROACH - 1
+        /*
+        int count_0 = 0;
+        int count_1 = 0;
+        int count_2 = 0;
+        
+        for(int i = 0; i < n; i++){
+            int ele = a[i];
+            if(ele == 0) count_0++;
+            else if(ele == 1) count_1++;
+            else count_2 ++;
+        }
+        int index = 0;
+        while(count_0-- > 0){
+            a[index++] = 0;
+        }
+        
+        while(count_1-- > 0){
+            a[index++] = 1;
+        }
+        
+        while(count_2-- > 0){
+            a[index++] = 2;
+        }
+        */
+        
+        // APPROACH - 2
+        int low = 0;
+        int mid = 0;
+        int high = n - 1;
+        
+        while(mid <= high){
+            if(a[mid] == 0){
+                swap(a, low, mid);
+                low++;
+                mid++;
+            }
+            else if(a[mid] == 1){
+                mid++;
+            }
+            else{
+                swap(a, mid, high);
+                high--;
+            }
+        }
+    }
+    
+    public static void swap(int a[], int first, int second){
+        int temp = a[first];
+        a[first] = a[second];
+        a[second] = temp;
+    }
+}
+=================================================
+
+This problem is also the same as the famous "Dutch National Flag problem". The problem was proposed by Edsger Dijkstra. The problem is as follows:
+
+
+
+
+
+Given N balls of colour red, white or blue arranged in a line in random order.
+You have to arrange all the balls such that the balls with the same colours are adjacent with the order of the balls, 
+with the order of the colours being red, white and blue (i.e., all red coloured balls come first then the white coloured balls and then the blue coloured balls). 
+
+
+Examples:
+
+Input: {0, 1, 2, 0, 1, 2}
+Output: {0, 0, 1, 1, 2, 2}
+
+Input: {0, 1, 1, 0, 1, 2, 1, 2, 0, 0, 0, 1}
+Output: {0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2}
+
+A simple solution is discussed in this(Sort an array of 0s, 1s and 2s (Simple Counting)) post.
+Method 1 
+
+Complete Interview Preparation - GFG
+
+Approach: The problem is similar to our old post "Segregate 0s and 1s in an array".
+The problem was posed with three colours, here `0', `1' and `2'. The array is divided into four sections: 
+a[1..Lo-1] zeroes (red)
+a[Lo..Mid-1] ones (white)
+a[Mid..Hi] unknown
+a[Hi+1..N] twos (blue)
+If the ith element is 0 then swap the element to the low range, thus shrinking the unknown range.
+Similarly, if the element is 1 then keep it as it is but shrink the unknown range.
+If the element is 2 then swap it with an element in high range.
+Algorithm: 
+Keep three indices low = 1, mid = 1 and high = N and there are four ranges, 
+  1 to low (the range containing 0), low to mid (the range containing 1),
+  mid to high (the range containing unknown elements) and 
+  high to N (the range containing 2).
+Traverse the array from start to end and mid is less than high. (Loop counter is i)
+If the element is 0 then swap the element with the element at index low and update low = low + 1 and mid = mid + 1
+If the element is 1 then update mid = mid + 1
+If the element is 2 then swap the element with the element at index high and update high = high - 1 and update i = i - 1. As the swapped element is not processed
+Print the array.
+Dry Run: 
+Part way through the process, some red, white and blue elements are known and are in the "right" place. 
+The section of unknown elements, a[Mid..Hi], is shrunk by examining a[Mid]:
+
+Examine a[Mid]. There are three possibilities: 
+a[Mid] is (0) red, (1) white or (2) blue. 
+Case (0) a[Mid] is red, swap a[Lo] and a[Mid]; Lo++; Mid++
+
+Case (1) a[Mid] is white, Mid++
+ 
+Case (2) a[Mid] is blue, swap a[Mid] and a[Hi]; Hi--
+ 
+Continue until Mid>Hi. 
+ 
+ 
+Implementation:
+
+
+// Java program to sort an array of 0, 1 and 2
+import java.io.*;
+
+class countzot {
+
+    // Sort the input array, the array is assumed to
+    // have values in {0, 1, 2}
+    static void sort012(int a[], int arr_size)
+    {
+        int lo = 0;
+        int hi = arr_size - 1;
+        int mid = 0, temp = 0;
+        while (mid <= hi) {
+            switch (a[mid]) {
+            case 0: {
+                temp = a[lo];
+                a[lo] = a[mid];
+                a[mid] = temp;
+                lo++;
+                mid++;
+                break;
+            }
+            case 1:
+                mid++;
+                break;
+            case 2: {
+                temp = a[mid];
+                a[mid] = a[hi];
+                a[hi] = temp;
+                hi--;
+                break;
+            }
+            }
+        }
+    }
+
+    /* Utility function to print array arr[] */
+    static void printArray(int arr[], int arr_size)
+    {
+        int i;
+        for (i = 0; i < arr_size; i++)
+            System.out.print(arr[i] + " ");
+        System.out.println("");
+    }
+
+    /*Driver function to check for above functions*/
+    public static void main(String[] args)
+    {
+        int arr[] = { 0, 1, 1, 0, 1, 2, 1, 2, 0, 0, 0, 1 };
+        int arr_size = arr.length;
+        sort012(arr, arr_size);
+        printArray(arr, arr_size);
+    }
+}
+/*This code is contributed by Devesh Agrawal*/
+
+
+Output
+0 0 0 0 0 1 1 1 1 1 2 2 
+
+
+Complexity Analysis: 
+
+
+
+Time Complexity: O(n). 
+Only one traversal of the array is needed.
+Space Complexity: O(1). 
+No extra space is required.
+
+==================================
+Approach: Count the number of 0s, 1s and 2s in the given array. Then store all the 0s in the beginning followed by all the 1s then all the 2s.
+
+
+Algorithm: 
+Keep three counter c0 to count 0s, c1 to count 1s and c2 to count 2s
+Traverse through the array and increase the count of c0 if the element is 0,
+increase the count of c1 if the element is 1 and increase the count of c2 if the element is 2
+Now again traverse the array and replace first c0 elements with 0, next c1 elements with 1 and next c2 elements with 2.
+Implementation:
+ 
+
+// Java implementation of the approach
+import java.io.*;
+
+class GFG {
+    // Utility function to print the contents of an array
+    static void printArr(int arr[], int n)
+    {
+        for (int i = 0; i < n; i++)
+            System.out.print(arr[i] + " ");
+    }
+    
+    // Function to sort the array of 0s, 1s and 2s
+    static void sortArr(int arr[], int n)
+    {
+        int i, cnt0 = 0, cnt1 = 0, cnt2 = 0;
+    
+        // Count the number of 0s, 1s and 2s in the array
+        for (i = 0; i < n; i++) {
+            switch (arr[i]) {
+            case 0:
+                cnt0++;
+                break;
+            case 1:
+                cnt1++;
+                break;
+            case 2:
+                cnt2++;
+                break;
+            }
+        }
+    
+        // Update the array
+        i = 0;
+    
+        // Store all the 0s in the beginning
+        while (cnt0 > 0) {
+            arr[i++] = 0;
+            cnt0--;
+        }
+    
+        // Then all the 1s
+        while (cnt1 > 0) {
+            arr[i++] = 1;
+            cnt1--;
+        }
+    
+        // Finally all the 2s
+        while (cnt2 > 0) {
+            arr[i++] = 2;
+            cnt2--;
+        }
+    
+        // Print the sorted array
+        printArr(arr, n);
+    }
+    
+    // Driver code
+    public static void main(String[] args)
+    {
+        int arr[] = { 0, 1, 1, 0, 1, 2, 1, 2, 0, 0, 0, 1 };
+        int n = arr.length;
+        sortArr(arr, n);
+    }
+}
+
+Output
+0 0 0 0 0 1 1 1 1 1 2 2 
+
+
+Complexity Analysis: 
+
+
+
+Time Complexity: O(n). 
+Only non nested traversals of the array is needed.
+Space Complexity: O(1). 
+As no extra space is required.
