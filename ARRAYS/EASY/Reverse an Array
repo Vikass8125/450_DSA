@@ -1,0 +1,189 @@
+// https://practice.geeksforgeeks.org/problems/reverse-an-array/0
+Given an array A of size N, print the reverse of it.
+
+Example:
+
+Input:
+1
+4
+1 2 3 4
+Output:
+4 3 2 1
+Input:
+First line contains an integer denoting the test cases 'T'. T testcases follow. Each testcase contains two lines of input. F
+irst line contains N the size of the array A. The second line contains the elements of the array.
+
+Output:
+For each testcase, in a new line, print the array in reverse order.
+
+Constraints:
+1 <= T <= 100
+1 <= N <=100
+0 <= Ai <= 100
+
+
+MY_SOLUTION
+/*package whatever //do not write package name here */
+
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+class GFG {
+	public static void main (String[] args) {
+		//code
+		Scanner in = new Scanner(System.in);
+		int t = in.nextInt();
+		while(t-- > 0){
+		    int n = in.nextInt();
+		    int[] arr = new int[n];
+		    for(int i = 0; i < n; i++){
+		        arr[i] = in.nextInt();
+	
+		    }
+		    
+		    
+		    for(int i = n - 1; i >= 0; i--){
+		        System.out.print(arr[i] + " ");
+		    }
+		    System.out.println();
+		    
+		}
+	}
+}
+
+=======================
+
+// https://www.geeksforgeeks.org/write-a-program-to-reverse-an-array-or-string/
+
+Iterative way :
+ 
+
+1) Initialize start and end indexes as start = 0, end = n-1 
+2) In a loop, swap arr[start] with arr[end] and change start and end as follows : 
+start = start +1, end = end – 1
+
+ 
+ 
+
+reverse-a-number
+
+Another example to reverse a string:
+ 
+
+reverse-a-string
+
+Below is the implementation of the above approach : 
+ 
+
+
+// Iterative java program to reverse an
+// array
+public class GFG {
+     
+   /* Function to reverse arr[] from
+    start to end*/
+    static void rvereseArray(int arr[],
+                    int start, int end)
+    {
+        int temp;
+          
+        while (start < end)
+        {
+            temp = arr[start];
+            arr[start] = arr[end];
+            arr[end] = temp;
+            start++;
+            end--;
+        }
+    }    
+      
+    /* Utility that prints out an
+    array on a line */
+    static void printArray(int arr[],
+                            int size)
+    {
+        for (int i = 0; i < size; i++)
+             System.out.print(arr[i] + " ");
+          
+         System.out.println();
+    }
+ 
+    // Driver code
+    public static void main(String args[]) {
+         
+        int arr[] = {1, 2, 3, 4, 5, 6};
+        printArray(arr, 6);
+        rvereseArray(arr, 0, 5);
+        System.out.print("Reversed array is \n");
+        printArray(arr, 6);
+        
+    }
+}
+ 
+// This code is contributed by Sam007
+Output : 
+
+1 2 3 4 5 6 
+Reversed array is 
+6 5 4 3 2 1 
+
+
+Time Complexity : O(n)
+Recursive Way :
+ 
+
+1) Initialize start and end indexes as start = 0, end = n-1 
+2) Swap arr[start] with arr[end] 
+3) Recursively call reverse for rest of the array.
+
+Below is the implementation of the above approach : 
+ 
+
+
+// Recursive Java Program to reverse an array
+import java.io.*;
+ 
+class ReverseArray {
+ 
+    /* Function to reverse arr[] from start to end*/
+    static void rvereseArray(int arr[], int start, int end)
+    {
+        int temp;
+        if (start >= end)
+            return;
+        temp = arr[start];
+        arr[start] = arr[end];
+        arr[end] = temp;
+        rvereseArray(arr, start+1, end-1);
+    }
+ 
+    /* Utility that prints out an array on a line */
+    static void printArray(int arr[], int size)
+    {
+        for (int i=0; i < size; i++)
+            System.out.print(arr[i] + " ");
+        System.out.println("");
+    }
+ 
+    /*Driver function to check for above functions*/
+    public static void main (String[] args) {
+        int arr[] = {1, 2, 3, 4, 5, 6};
+        printArray(arr, 6);
+        rvereseArray(arr, 0, 5);
+        System.out.println("Reversed array is ");
+        printArray(arr, 6);
+    }
+}
+/*This article is contributed by Devesh Agrawal*/
+Output : 
+
+1 2 3 4 5 6 
+Reversed array is 
+6 5 4 3 2 1 
+
+
+Time Complexity : O(n)
+
+Another Approach: Using Python List slicing
+
