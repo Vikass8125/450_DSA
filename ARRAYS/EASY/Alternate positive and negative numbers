@@ -1,0 +1,398 @@
+Given an unsorted array Arr of N positive and negative numbers. Your task is to create an array of alternate positive and negative numbers 
+\without changing the relative order of positive and negative numbers.
+Note: Array should start with positive number.
+ 
+
+Example 1:
+
+Input: 
+N = 9
+Arr[] = {9, 4, -2, -1, 5, 0, -5, -3, 2}
+Output:
+9 -2 4 -1 5 -5 0 -3 2
+Example 2:
+
+Input: 
+N = 10
+Arr[] = {-5, -2, 5, 2, 4, 7, 1, 8, 0, -8}
+Output:
+5 -5 2 -2 4 -8 7 1 8 0 
+
+
+Your Task:  
+You don't need to read input or print anything. Your task is to complete the function rearrange() which takes the array of integers arr[] and n as parameters. 
+You need to modify the array itself.
+
+Expected Time Complexity: O(N)
+Expected Auxiliary Space: O(N)
+ 
+
+Constraints:
+1 ≤ N ≤ 107
+-106 ≤ Arr[i] ≤ 107
+
+MY_SOLUTION
+
+class Solution {
+    void rearrange(int arr[], int n) {
+        // code here
+        int negCount = 0;
+        for(int ele : arr){
+            if(ele < 0) negCount++;
+        }
+        
+        int[] pos = new int[n - negCount];
+        int[] neg = new int[negCount];
+        
+        int i = 0, j = 0;
+        for(int ele : arr){
+            if(ele >= 0) pos[i++] = ele;
+            else neg[j++] = ele;
+        }
+        int ind = 0;
+        int p = 0;
+        int m = 0;
+        while(p < pos.length && m < neg.length){
+            arr[ind++] = pos[p++];
+            arr[ind++] = neg[m++];
+        }
+        
+        while(p < pos.length){
+            arr[ind++] = pos[p++];
+        }
+        
+        while(m < neg.length){
+            arr[ind++] = neg[m++];
+        }
+    }
+}
+
+==================================
+class Solution {
+   void rearrange(int arr[], int n) {
+      
+      
+      ArrayList<Integer> positiveArr = new ArrayList<Integer>();
+      ArrayList<Integer> negativeArr = new ArrayList<Integer>();
+      ArrayList<Integer> finalArr = new ArrayList<Integer>();
+      
+      
+      // collecting positive elements in positiveArr  and negative elements in negativeArr
+      for(int x:arr){
+          
+          if(x>=0){
+              positiveArr.add(x);
+          }
+          else{
+              negativeArr.add(x);
+          }
+      }
+      
+      
+      int i=0;
+      int j=0;
+      
+      // copying the positive and negative elements in finalArr in alternate position 
+      while(i<positiveArr.size()  && j<negativeArr.size()){
+          
+          finalArr.add(positiveArr.get(i));
+          i++;
+          
+          finalArr.add(negativeArr.get(j));
+          j++;
+          
+      }
+      
+      
+      
+      // collecting remaining positiive elements 
+      while(i<positiveArr.size()){
+          finalArr.add(positiveArr.get(i));
+          i++;
+      }
+      
+      // collecting remaining negative elements  
+      while(j<negativeArr.size()){
+          finalArr.add(negativeArr.get(j));
+          j++;
+      }
+      
+      
+      // copying in arr from finalArr 
+      for(int k=0; k<n; k++)
+      {
+          arr[k] = finalArr.get(k);
+      }
+      
+      
+   }
+}
+==============================================
+
+void rearrange(int arr[], int n) {
+        Stack<Integer> stk1 = new Stack<>();
+        Stack<Integer> stk2 = new Stack<>();  
+        for(int i=n-1;i>=0;i--){
+            if(arr[i]>=0){
+                stk1.push(arr[i]);
+            }else{
+                stk2.push(arr[i]);
+            }
+        }
+        for(int i=0;i<n;i++){
+            if(i%2==0 && !stk1.isEmpty()){
+                arr[i]=stk1.pop();
+            }
+            else if(i%2==1&& !stk2.isEmpty()){
+                arr[i]=stk2.pop();
+            }else if(!stk1.isEmpty()){
+                arr[i]=stk1.pop();
+            }else{
+                arr[i]=stk2.pop();
+            }
+        }
+    }
+    
+    
+ ========================================
+ class Solution{
+    void rearrange(int arr[], int n) {
+
+        ArrayList<Integer> neg = new ArrayList<Integer>();
+        ArrayList<Integer> pos = new ArrayList<Integer>();
+        
+        for (int i = 0; i < n; i++) {
+
+            if (arr[i] < 0)
+                neg.add(arr[i]);
+            else
+                pos.add(arr[i]);
+        }
+
+        int i = 0, j = 0, k = 0;
+        while (i < neg.size() && j < pos.size()) {
+            arr[k++] = pos.get(j++);
+            arr[k++] = neg.get(i++);
+        }
+        while (j < pos.size()) { arr[k++] = pos.get(j++); }
+
+        while (i < neg.size()) { arr[k++] = neg.get(i++); }
+    }
+}
+==============================================
+
+// https://www.cdn.geeksforgeeks.org/rearrange-array-in-alternating-positive-negative-items-with-o1-extra-space-set-2/
+
+Approach 1:
+
+First, sort the array in non-increasing order. Then we will count the number of positive and negative integers.
+Then swap the one negative and one positive number in the odd positions till we reach our condition.
+This will rearrange the array elements because we are sorting the array and accessing the element from left to right according to our need.
+Below is the implementation of the above approach:
+
+
+// Below is the implementation of the above approach
+import java.io.*;
+import java.lang.*;
+import java.util.*;
+public class Main {
+   
+    // function which works in the condition when number of
+    // negative numbers are lesser or equal than positive
+    // numbers
+    static void fill1(int a[], int neg, int pos)
+    {
+        if (neg % 2 == 1) {
+            for (int i = 1; i < neg; i += 2) {
+                int c = a[i];
+                int d = a[i + neg];
+                int temp = c;
+                a[i] = d;
+                a[i + neg] = temp;
+            }
+        }
+        else {
+            for (int i = 1; i <= neg; i += 2) {
+                int c = a[i];
+                int d = a[i + neg - 1];
+                int temp = c;
+                a[i] = d;
+                a[i + neg - 1] = temp;
+            }
+        }
+    }
+   
+    // Function which works in the condition when number of
+    // negative numbers are greater than positive numbers
+    static void fill2(int a[], int neg, int pos)
+    {
+        if (pos % 2 == 1) {
+            for (int i = 1; i < pos; i += 2) {
+                int c = a[i];
+                int d = a[i + pos];
+                int temp = c;
+                a[i] = d;
+                a[i + pos] = temp;
+            }
+        }
+        else {
+            for (int i = 1; i <= pos; i += 2) {
+                int c = a[i];
+                int d = a[i + pos - 1];
+                int temp = c;
+                a[i] = d;
+                a[i + pos - 1] = temp;
+            }
+        }
+    }
+   
+    // Reverse the array
+    static void reverse(int a[], int n)
+    {
+        int i, k, t;
+        for (i = 0; i < n / 2; i++) {
+            t = a[i];
+            a[i] = a[n - i - 1];
+            a[n - i - 1] = t;
+        }
+    }
+   
+    // Print the array
+    static void print(int a[], int n)
+    {
+        for (int i = 0; i < n; i++)
+            System.out.print(a[i] + " ");
+        System.out.println();
+    }
+   
+    // Driver Code
+    public static void main(String[] args)
+        throws java.lang.Exception
+    {
+        // Given array
+        int[] arr = { 2, 3, -4, -1, 6, -9 };
+        int n = arr.length;
+        System.out.println("Given array is  ");
+        print(arr, n);
+        int neg = 0, pos = 0;
+        for (int i = 0; i < n; i++) {
+            if (arr[i] < 0)
+                neg++;
+            else
+                pos++;
+        }
+        // Sort the array
+        Arrays.sort(arr);
+ 
+        if (neg <= pos) {
+            fill1(arr, neg, pos);
+        }
+        else {
+            // reverse the array in this condition
+            reverse(arr, n);
+            fill2(arr, neg, pos);
+        }
+        System.out.println("Rearranged array is  ");
+        print(arr, n);
+    }
+}
+Output
+Given array is 2 3 -4 -1 6 -9 
+Rearranged array is  -9 3 -1 2 -4 6 
+Time Complexity: O(N*logN)
+Space Complexity: O(1)
+
+Efficient Approach: We have already discussed a O(n2) solution that maintains the order of appearance in the array here.
+If we are allowed to change order of appearance, we can solve this problem in O(n) time and O(1) space.
+The idea is to process the array and shift all negative values to the end in O(n) time. 
+After all negative values are shifted to the end, we can easily rearrange array in alternating positive & negative items. 
+We basically swap next positive element at even position from next negative element in this step. 
+
+Following is the implementation of above idea.
+
+
+// Java program to rearrange
+// array in alternating
+// positive & negative
+// items with O(1) extra space
+class GFG {
+ 
+    // Function to rearrange positive and negative
+    // integers in alternate fashion. The below
+    // solution doesn't maintain original order of
+    // elements
+    static void rearrange(int arr[], int n)
+    {
+        int i = 0, j = n - 1;
+ 
+        // shift all negative values to the end
+        while (i < j) {
+            while (i <= n - 1 && arr[i] > 0)
+                i += 1;
+            while (j >= 0 && arr[j] < 0)
+                j -= 1;
+            if (i < j)
+                swap(arr, i, j);
+        }
+ 
+        // i has index of leftmost negative element
+        if (i == 0 || i == n)
+            return;
+ 
+        // start with first positive
+        // element at index 0
+ 
+        // Rearrange array in alternating positive &
+        // negative items
+        int k = 0;
+        while (k < n && i < n) {
+            // swap next positive element
+            // at even position
+            // from next negative element.
+            swap(arr, k, i);
+            i = i + 1;
+            k = k + 2;
+        }
+    }
+ 
+    // Utility function to print an array
+    static void printArray(int arr[], int n)
+    {
+        for (int i = 0; i < n; i++)
+            System.out.print(arr[i] + " ");
+        System.out.println("");
+    }
+ 
+    static void swap(int arr[], int index1, int index2)
+    {
+        int c = arr[index1];
+        arr[index1] = arr[index2];
+        arr[index2] = c;
+    }
+ 
+    // Driver code
+    public static void main(String[] args)
+    {
+        int arr[] = { 2, 3, -4, -1, 6, -9 };
+ 
+        int n = arr.length;
+ 
+        System.out.println("Given array is ");
+        printArray(arr, n);
+ 
+        rearrange(arr, n);
+ 
+        System.out.println("Rearranged array is ");
+        printArray(arr, n);
+    }
+}
+ 
+// This code is contributed by 29AjayKumar
+Output
+Given array is 
+2 3 -4 -1 6 -9 
+Rearranged array is 
+-1 3 -4 2 -9 6 
+Time Complexity : O(N)
+Space Complexity : O(1)
+
