@@ -1,0 +1,399 @@
+Given an array of N integers, and an integer K, find the number of pairs of elements in the array whose sum is equal to K.
+
+
+Example 1:
+
+Input:
+N = 4, K = 6
+arr[] = {1, 5, 7, 1}
+Output: 2
+Explanation: 
+arr[0] + arr[1] = 1 + 5 = 6 
+and arr[1] + arr[3] = 5 + 1 = 6.
+
+Example 2:
+
+Input:
+N = 4, K = 2
+arr[] = {1, 1, 1, 1}
+Output: 6
+Explanation: 
+Each 1 will produce sum 2 with any 1.
+
+Your Task:
+You don't need to read input or print anything. Your task is to complete the function getPairsCount() which takes arr[], 
+n and k as input parameters and returns the number of pairs that have sum K.
+
+
+Expected Time Complexity: O(N)
+Expected Auxiliary Space: O(N)
+
+Constraints:
+1 <= N <= 105
+1 <= K <= 108
+1 <= Arr[i] <= 106
+
+ MY_SOLUTION
+ 
+ class Solution {
+    int getPairsCount(int[] arr, int n, int k) {
+        // code here
+        /*
+        int count = 0;
+        for(int i = 0; i < n; i++){
+            for(int j = i + 1; j < n; j++){
+                if(arr[i] + arr[j] == k){
+                    count++;
+                }
+            }
+        }
+        return count
+        */
+        
+        // OPTIMISED
+        
+        int count = 0;
+        HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+        
+        for(int i = 0; i < n; i++){
+            if(map.containsKey(k - arr[i])){
+                count += map.get(k - arr[i]);
+               
+            }
+            map.put(arr[i], map.getOrDefault(arr[i], 0) + 1);
+        }
+        return count;
+    }
+    
+    
+}
+=======================================================
+
+class Solution {
+    int getPairsCount(int[] arr, int n, int k) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int count = 0;
+        
+        for(int i = 0; i < n; i++){
+            if(map.containsKey(k - arr[i])){
+                count += map.get(k - arr[i]);
+            }
+            
+            if(map.containsKey(arr[i])){
+                map.put(arr[i], map.get(arr[i]) + 1);
+            }else{
+                map.put(arr[i], 1);
+            }
+        }
+        
+        return count;
+    }
+}
+
+===========================================================
+// https://www.geeksforgeeks.org/count-pairs-with-given-sum/
+
+Follow the steps below to solve the given problem:
+
+Initialize the count variable with 0 which stores the result.
+Iterate arr and if the sum of ith and jth [i + 1…..n – 1] element is equal to sum i.e. arr[i] + arr[j] == sum, then increment the count variable.
+Return the count.
+Below is the implementation of the above approach.
+
+
+// Java implementation of simple method to find count of
+// pairs with given sum.
+public class find {
+    public static void main(String args[])
+    {
+        int[] arr = { 1, 5, 7, -1, 5 };
+        int sum = 6;
+        getPairsCount(arr, sum);
+    }
+ 
+    // Prints number of pairs in arr[0..n-1] with sum equal
+    // to 'sum'
+    public static void getPairsCount(int[] arr, int sum)
+    {
+ 
+        int count = 0; // Initialize result
+ 
+        // Consider all possible pairs and check their sums
+        for (int i = 0; i < arr.length; i++)
+            for (int j = i + 1; j < arr.length; j++)
+                if ((arr[i] + arr[j]) == sum)
+                    count++;
+ 
+        System.out.printf("Count of pairs is %d", count);
+    }
+}
+ 
+// This code is contributed by Aditya Kumar (adityakumar129)
+Output
+Count of pairs is 3
+Time Complexity: O(n2), traversing the array for each element
+Auxiliary Space: O(1)
+
+Count pairs with given sum using Binary Search
+This approach is based on the following idea:
+
+If the array is sorted then for each array element arr[i], find the number of pairs by finding all the values (sum – arr[i]) which are situated after ith index.
+This can be achieved using Binary Search.
+Illustration:
+
+Given arr[] = {1, 5, 7, -1}, sum = 6
+
+Array after sorting: arr[] = {-1, 1, 5, 7}
+count = 0
+
+At index = 0: val = sum – arr[0] = 6 – (-1) = 7
+count = count + upperBound(1, 3, 7) – lowerBound(1, 3, 7)
+count = 1
+
+At index = 1: val = sum – arr[1] = 6 – 1 = 5
+count = count + upperBound(2, 3, 5) – lowerBound(2, 3, 5)
+count = 2
+
+At index = 2: val = sum – arr[2] = 6 – 5 = 1
+count = count + upperBound(3, 3, 1) – lowerBound(3, 3, 1)
+count = 2
+
+Number of pairs = 2
+
+Follow the steps below to solve the given problem:
+
+Sort the array arr[] in increasing order.
+Loop from i = 0 to N-1.
+Find the index of the first element having value same or just greater than (sum – arr[i]) using lower bound.
+Find the index of the first element having value just greater than (sum – arr[i]) using upper bound.
+The gap between these two indices is the number of elements with value same as (sum – arr[i]).
+Add this with the final count of pairs.
+Return the final count after the iteration is over.
+Below is the implementation of the above approach.
+
+
+// C++ code to implement the approach
+ 
+#include <bits/stdc++.h>
+using namespace std;
+ 
+// Function to find the count of pairs
+int getPairsCount(int arr[], int n, int k)
+{
+    sort(arr, arr + n);
+    int x = 0, c = 0, y, z;
+    for (int i = 0; i < n - 1; i++) {
+        x = k - arr[i];
+ 
+        // Lower bound from i+1
+        int y = lower_bound(arr + i + 1, arr + n, x) - arr;
+ 
+        // Upper bound from i+1
+        int z = upper_bound(arr + i + 1, arr + n, x) - arr;
+        c = c + z - y;
+    }
+    return c;
+}
+ 
+// Driver code
+int main()
+{
+    int arr[] = { 1, 5, 7, -1, 5 };
+    int n = sizeof(arr) / sizeof(arr[0]);
+    int k = 6;
+ 
+    // Function call
+    cout << "Count of pairs is "
+         << getPairsCount(arr, n, k);
+    return 0;
+}
+Output
+Count of pairs is 3
+Time Complexity: O(n * log(n) ), applying binary search on each element
+Auxiliary Space: O(1)
+
+Count pairs with given sum using Hashing
+This approach is based on the following idea:
+
+Check the frequency of sum – arr[i] in the arr
+This can be achieved using Hashing.
+Illustration:
+
+Given arr[] = {1, 5, 7, -1}, sum = 6
+
+Store the frequency of every element: 
+freq[arr[i]] = freq[arr[i]] + 1
+freq[1] : 1
+freq[5] : 1
+freq[7] : 1
+freq[-1] : 1
+ 
+
+Initialise a variable count with 0 to find the required count of pairs
+At index = 0: freq[sum – arr[0]] = freq[6 – 1] = freq[5] = 1
+count = 1
+At index = 1: freq[sum – arr[1]] = freq[6 – 5] = freq[1] = 1
+count = 2
+At index = 2: freq[sum – arr[2]] = freq[6 – 7] = freq[-1] = 1
+count = 3
+At index = 3: freq[sum – arr[3]] = freq[6 – (-1)] = freq[7] = 1
+count = 4
+The above also contains repeated pairs from front and last, i.e. pair (a, b) and (b, a) are considered as different pairs till now.
+Therefore, we will reduce the count by half to determine the count of unique pairs.
+count = count / 2 = 2
+
+Therefore, required Number of pairs with given sum = 2
+Follow the steps below to solve the given problem: 
+
+Create a map to store the frequency of each number in the array. (Single traversal is required)
+In the next traversal, for every element check if it can be combined with any other element (other than itself!) to give the desired sum. 
+Increment the counter accordingly.
+After completion of the second traversal, we’d have twice the required value stored in counter because every pair is counted two times. 
+Hence divide the count by 2 and return.
+Below is the implementation of the above idea : 
+ 
+
+
+/* Java implementation of simple method to find count of
+pairs with given sum*/
+ 
+import java.util.HashMap;
+ 
+class Test {
+    static int arr[] = new int[] { 1, 5, 7, -1, 5 };
+ 
+    // Returns number of pairs in arr[0..n-1] with sum equal
+    // to 'sum'
+    static int getPairsCount(int n, int sum)
+    {
+        HashMap<Integer, Integer> hm = new HashMap<>();
+ 
+        // Store counts of all elements in map hm
+        for (int i = 0; i < n; i++) {
+ 
+            // initializing value to 0, if key not found
+            if (!hm.containsKey(arr[i]))
+                hm.put(arr[i], 0);
+ 
+            hm.put(arr[i], hm.get(arr[i]) + 1);
+        }
+        int twice_count = 0;
+ 
+        // iterate through each element and increment the
+        // count (Notice that every pair is counted twice)
+        for (int i = 0; i < n; i++) {
+            if (hm.get(sum - arr[i]) != null)
+                twice_count += hm.get(sum - arr[i]);
+ 
+            // if (arr[i], arr[i]) pair satisfies the
+            // condition, then we need to ensure that the
+            // count is decreased by one such that the
+            // (arr[i], arr[i]) pair is not considered
+            if (sum - arr[i] == arr[i])
+                twice_count--;
+        }
+ 
+        // return the half of twice_count
+        return twice_count / 2;
+    }
+ 
+    // Driver method to test the above function
+    public static void main(String[] args)
+    {
+ 
+        int sum = 6;
+        System.out.println(
+            "Count of pairs is "
+            + getPairsCount(arr.length, sum));
+    }
+}
+// This code is contributed by Gaurav Miglani
+Output
+Count of pairs is 3
+Time Complexity: O(n), to iterate over the array
+Auxiliary Space: O(n), to make a map of size n
+
+Count pairs with given sum using Hashing in Single loop
+This approach is based on the following idea:
+
+The idea is to solve in single loop.
+Check the frequency of sum – arr[i] in the arr
+This can be achieved using Hashing.
+Illustration:
+
+Given arr[] = {1, 5, 7, -1}, sum = 6
+
+countcount = 0
+
+At index = 0: freq[sum – arr[0]] = freq[6 – 1] = freq[5] = 0
+count = 0
+freq[arr[0]] = freq[1] = 1
+
+At index = 1: freq[sum – arr[1]] = freq[6 – 5] = freq[1] = 1
+count = 1
+freq[arr[1]] = freq[5] = 1
+
+At index = 2: freq[sum – arr[2]] = freq[6 – 7] = freq[-1] = 0
+count = 1
+freq[arr[2]] = freq[7] = 1
+
+At index = 3: freq[sum – arr[3]] = freq[6 – (-1)] = freq[7] = 1
+count = 2
+freq[arr[3]] = freq[-1] = 1
+
+count = 2
+
+Number of pairs  = 2
+
+Follow the steps below to solve the given problem: 
+
+Create a map to store the frequency of each number in the array.
+Check if (sum – arr[i]) is present in the map, if present then increment the count variable by its frequency.
+After traversal is over, return the count.
+Below is the implementation of the above idea : 
+
+
+// Java implementation of simple method to find count of
+// pairs with given sum.
+import java.util.*;
+ 
+class GFG {
+ 
+    // Returns number of pairs in arr[0..n-1] with sum equal
+    // to 'sum'
+    static int getPairsCount(int arr[], int n, int k)
+    {
+        HashMap<Integer, Integer> m = new HashMap<>();
+        int count = 0;
+        for (int i = 0; i < n; i++) {
+            if (m.containsKey(k - arr[i])) {
+                count += m.get(k - arr[i]);
+            }
+            if (m.containsKey(arr[i])) {
+                m.put(arr[i], m.get(arr[i]) + 1);
+            }
+            else {
+                m.put(arr[i], 1);
+            }
+        }
+        return count;
+    }
+ 
+    // Driver function to test the above function
+    public static void main(String[] args)
+    {
+        int arr[] = { 1, 5, 7, -1, 5 };
+        int n = arr.length;
+        int sum = 6;
+        System.out.print("Count of pairs is "
+                         + getPairsCount(arr, n, sum));
+    }
+}
+ 
+// This code is contributed by umadevi9616
+Output
+Count of pairs is 3
+Time Complexity: O(n), to iterate over the array
+Auxiliary Space: O(n), to make a map of size n
+
+
