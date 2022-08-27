@@ -1,0 +1,216 @@
+Given an array arr[] denoting heights of N towers and a positive integer K.
+
+For each tower, you must perform exactly one of the following operations exactly once.
+
+Increase the height of the tower by K.
+Decrease the height of the tower by K ( you can do this operation only if the height of the tower is greater than or equal to K)
+Find out the minimum possible difference between the height of the shortest and tallest towers after you have modified each tower.
+
+You can find a slight modification of the problem here.
+Note: It is compulsory to increase or decrease the height by K for each tower.
+
+
+Example 1:
+
+Input:
+K = 2, N = 4
+Arr[] = {1, 5, 8, 10}
+Output:
+5
+Explanation:
+The array can be modified as 
+{3, 3, 6, 8}. The difference between 
+the largest and the smallest is 8-3 = 5.
+Example 2:
+
+Input:
+K = 3, N = 5
+Arr[] = {3, 9, 12, 16, 20}
+Output:
+11
+Explanation:
+The array can be modified as
+{6, 12, 9, 13, 17}. The difference between 
+the largest and the smallest is 17-6 = 11. 
+
+Your Task:
+You don't need to read input or print anything. Your task is to complete the function getMinDiff() which takes the arr[], n,
+and k as input parameters and returns an integer denoting the minimum difference.
+
+
+Expected Time Complexity: O(N*logN)
+Expected Auxiliary Space: O(N)
+
+Constraints
+1 ≤ K ≤ 104
+1 ≤ N ≤ 105
+1 ≤ Arr[i] ≤ 105
+
+
+MY_SOLUTION
+
+
+Minimize the maximum difference between the heights using Sorting
+The idea for this is given below:
+
+The idea is to increase the first i towers by k and decrease the rest tower by k after sorting the heights, then calculate the maximum height difference.
+This can be achieved using sorting.
+Illustration:
+
+Given arr[] = {1, 15, 10}, n = 3, k = 6
+
+Array after sorting => arr[] = {1, 10, 15}
+
+Initially maxHeight = arr[n – 1] = 15
+            minHeight = arr[0] = 1
+            ans = maxHeight – minHeight = 15 – 1 = 14
+
+At i = 1
+
+minHeight = min(arr[0] + k, arr[i] – k) = min(1 + 6, 10 – 6) = 4
+maxHeight = max(arr[i – 1] + k, arr[n – 1] – k) = max(1 + 6, 15 – 6) = 9
+ans = min(ans, maxHeight – minHeight) = min(14, 9 – 4) = 5 => ans = 5
+At i = 2
+
+minHeight = min(arr[0] + k, arr[i] – k) = min(1 + 6, 15 – 6) = 7
+maxHeight = max(arr[i – 1] + k, arr[n – 1] – k) = max(10 + 6, 15 – 6) = 16
+ans = min(ans, maxHeight – minHeight) = min(5, 16 – 7) = 5 => ans = 5
+Hence minimum difference is 5 
+
+ 
+Complete Interview Preparation - GFG
+
+Note:- Consider where a[i] < K because the height of the tower can’t be negative so neglect that case.
+
+Follow the steps below to solve the given problem:
+
+Sort the array 
+Try to make each height of the tower maximum by decreasing the height of all the towers to the right by k and increasing all the 
+height of the towers to the left by k. Check whether the current index tower has the maximum height or not by comparing it with a[n]-k. 
+If the tower’s height is greater than the a[n]-k then it’s the tallest tower available.
+Similarly, find the shortest tower and minimize the difference between these two towers.  
+Below is the implementation of the above approach:
+
+
+/*package whatever //do not write package name here */
+  
+import java.io.*;
+import java.util.*;
+  
+// Driver code
+public class Main {
+  
+    public static void main(String[] args)
+    {
+        int[] arr = { 7, 4, 8, 8, 8, 9 };
+        int k = 6;
+        int ans = getMinDiff(arr, arr.length, k);
+        System.out.println(ans);
+    }
+  
+    // User function Template for Java
+    public static int getMinDiff(int[] arr, int n, int k)
+    {
+  
+        Arrays.sort(arr);
+        // Maximum possible height difference
+        int ans = arr[n - 1] - arr[0];
+  
+        int tempmin, tempmax;
+        tempmin = arr[0];
+        tempmax = arr[n - 1];
+  
+        for (int i = 1; i < n; i++) {
+  
+            // if on subtracting k we got negative then
+            // continue
+            if (arr[i] - k < 0)
+                continue;
+  
+            // Minimum element when we add k to whole array
+            tempmin = Math.min(arr[0] + k, arr[i] - k);
+  
+            // Maximum element when we subtract k from whole
+            // array
+            tempmax
+                = Math.max(arr[i - 1] + k, arr[n - 1] - k);
+            ans = Math.min(ans, tempmax - tempmin);
+        }
+        return ans;
+    }
+}
+Output
+5
+Time Complexity: O(N * log(N)), Time is taken for sorting
+Auxiliary Space: O(1)
+
+
+==================================================================================
+
+class Solution {
+
+    static class Pair {
+        int first, second;
+        Pair(int x, int y) {
+            first = x;
+            second = y;
+        }
+    }
+
+    int getMinDiff(int[] arr, int n, int k) {
+        ArrayList<Pair> v = new ArrayList<Pair>();
+
+        int[] taken = new int[n];
+
+        // we will store all possible heights in a vector
+        for (int i = 0; i < n; i++) {
+            if (arr[i] - k >= 0) {
+                v.add(new Pair(arr[i] - k, i));
+            }
+            v.add(new Pair(arr[i] + k, i));
+        }
+
+        Collections.sort(v, new Comparator<Pair>() {
+            @Override   public int compare(Pair p1, Pair p2) {
+                if (p1.first == p2.first) return p1.second - p2.second;
+                return p1.first - p2.first;
+            }
+        });
+
+        int elements_in_range = 0;
+        int left = 0;
+        int right = 0;
+
+        // By two pointer we will traverse v and whenever we will get a range
+        // in which all towers are included, we will update the answer.
+        while (elements_in_range < n && right < v.size()) {
+            if (taken[v.get(right).second] == 0) {
+                elements_in_range++;
+            }
+            taken[v.get(right).second]++;
+            right++;
+        }
+        int ans = v.get(right - 1).first - v.get(left).first;
+        while (right < v.size()) {
+            if (taken[v.get(left).second] == 1) {
+                elements_in_range--;
+            }
+            taken[v.get(left).second]--;
+            left++;
+
+            while (elements_in_range < n && right < v.size()) {
+                if (taken[v.get(right).second] == 0) {
+                    elements_in_range++;
+                }
+                taken[v.get(right).second]++;
+                right++;
+            }
+
+            if (elements_in_range == n) {
+                ans = Math.min(ans, v.get(right - 1).first - v.get(left).first);
+            } else
+                break;
+        }
+        return ans;
+    }
+}
