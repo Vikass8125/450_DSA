@@ -1,0 +1,157 @@
+Given an array of positive and negative numbers. Find if there is a subarray (of size at-least one) with 0 sum.
+
+Example 1:
+
+Input:
+5
+4 2 -3 1 6
+
+Output: 
+Yes
+
+Explanation: 
+2, -3, 1 is the subarray 
+with sum 0.
+Example 2:
+
+Input:
+5
+4 2 0 1 6
+
+Output: 
+Yes
+
+Explanation: 
+0 is one of the element 
+in the array so there exist a 
+subarray with sum 0.
+Your Task:
+You only need to complete the function subArrayExists() that takes array and n as 
+parameters and returns true or false depending upon whether there is a subarray present with 0-sum or not. Printing will be taken care by the drivers code.
+
+Expected Time Complexity: O(n).
+Expected Auxiliary Space: O(n).
+
+Constraints:
+1 <= n <= 104
+-105 <= a[i] <= 105
+
+MY_SOLUTION
+class Solution{
+    //Function to check whether there is a subarray present with 0-sum or not.
+    static boolean findsum(int arr[],int n)
+    {
+        //Your code here
+        //BRUTE FORCE -> TLE
+        /*
+        boolean flag = false;
+        for(int i = 0; i < n; i++){
+            int sum = arr[i];
+            if(sum == 0) flag = true;
+            for(int j = i + 1; j < n; j++){
+                sum += arr[j];
+                if(sum == 0){
+                    flag = true;
+                    break;
+                } 
+            }
+        }
+        return flag;
+        */
+        
+        // USING HASHSET -> T.C: O(N), S.C: O(N)
+        HashSet<Integer> set = new HashSet<Integer>();
+        int sum = 0;
+        
+        for(int i = 0; i < n; i++){
+            sum += arr[i];
+            if(set.contains(sum)) return true;
+            else set.add(sum);
+        }
+        if(set.contains(0)) return true;
+        return false;
+    }
+}
+
+=================================================
+Naive approach:
+consider all subarrays one by one and check the sum of every subarray. Run two loops: the outer loop picks a starting point i and the
+inner loop tries all subarrays starting from i (See this for implementation).
+
+Time Complexity: O(N2)
+Auxiliary Space: O(1)
+
+Find if there is a subarray with 0 sum using hashing: 
+The idea is to iterate through the array and for every element arr[i], 
+calculate the sum of elements from 0 to i (this can simply be done as sum += arr[i]). 
+If the current sum has been seen before, then there is a zero-sum array. 
+Hashing is used to store the sum values so that sum can be stored quickly and find out whether the current sum is seen before or not.
+
+Follow the given steps to solve the problem:
+
+Declare a variable sum, to store the sum of prefix elements
+Traverse the array and at each index, add the element into the sum and check if this sum exists earlier. If the sum exists, then return true
+Also, insert every prefix sum into a map, so that later on it can be found whether the current sum is seen before or not
+At the end return false, as no such subarray is found
+Illustration:
+
+arr[] = {1, 4, -2, -2, 5, -4, 3}
+
+Consider all prefix sums, one can notice that there is a subarray with 0 sum when :
+
+Either a prefix sum repeats or
+Or prefix sum becomes 0.
+Prefix sums for above array are: 1, 5, 3, 1, 6, 2, 5
+Since prefix sum 1 repeats, we have a subarray with 0 sum. 
+
+Below is the Implementation of the above approach:
+
+// C++ program to find if
+// there is a zero sum subarray
+
+#include <bits/stdc++.h>
+using namespace std;
+
+bool subArrayExists(int arr[], int N)
+{
+    unordered_set<int> sumSet;
+
+    // Traverse through array
+    // and store prefix sums
+    int sum = 0;
+    for (int i = 0; i < N; i++) {
+        sum += arr[i];
+
+        // If prefix sum is 0 or
+        // it is already present
+        if (sum == 0 || sumSet.find(sum) != sumSet.end())
+            return true;
+
+        sumSet.insert(sum);
+    }
+    return false;
+}
+
+// Driver's code
+int main()
+{
+    int arr[] = {-3, 2, 3, 1, 6};
+    int N = sizeof(arr) / sizeof(arr[0]);
+
+    // Function call
+    if (subArrayExists(arr, N))
+        cout << "Found a subarray with 0 sum";
+    else
+        cout << "No Such Sub Array Exists!";
+    return 0;
+}
+
+Output
+No Such Sub Array Exists!
+Time Complexity: O(N) under the assumption that a good hashing function is used, that allows insertion and retrieval operations in O(1) time. 
+Auxiliary Space: O(N) Here extra space is required for hashing
+
+==================================================
+
+
+ 
