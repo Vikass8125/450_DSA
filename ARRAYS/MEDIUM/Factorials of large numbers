@@ -1,0 +1,244 @@
+Given an integer N, find its factorial.
+
+Example 1:
+
+Input: N = 5
+Output: 120
+Explanation : 5! = 1*2*3*4*5 = 120
+Example 2:
+
+Input: N = 10
+Output: 3628800
+Explanation :
+10! = 1*2*3*4*5*6*7*8*9*10 = 3628800
+
+Your Task:
+You don't need to read input or print anything. Complete the function factorial() that takes integer N as input parameter and returns 
+a list of integers denoting the digits that make up the factorial of N.
+
+
+Expected Time Complexity : O(N2)
+Expected Auxilliary Space : O(1)
+
+
+Constraints:
+1 ≤ N ≤ 1000
+
+=====================================================================================
+MY_SOLUTION
+
+// https://www.geeksforgeeks.org/factorial-large-number/
+
+class Solution {
+    static ArrayList<Integer> factorial(int N){
+        int c = 0;      //c = carry
+        
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(0,1);  // 0th index pr initially 1 add kiya hai 
+       
+        
+        int val = 2;  // 2 se multiply krna start krenge 2 x 3 x 4...N
+        while(val <= N){
+            
+            for(int i = list.size()-1; i >= 0; i--){
+            
+            // last digit milri hai list.get(i) se then X val X carry 
+				int temp= list.get(i)*val+c;  
+                
+               	list.set(i,temp%10);  
+                c = temp/10;
+            }
+            
+            while(c != 0){
+                list.add(0, c%10);
+                c = c/10;
+               
+            }
+            val++;
+        }
+        return list;
+    }
+}
+=======================================================================================
+class Solution {
+    static ArrayList<Integer> factorial(int N){
+        //code here
+        LinkedList<Integer> result = new LinkedList<Integer>();
+        result.add(1);
+        
+        for(int i=2;i<=N;i++){
+            int j=0;
+            int k=result.size();
+            int carry=0;
+            while(j<k){
+                int tmp = result.poll();
+                tmp = tmp*i + carry;
+                result.add(tmp%10);
+                carry = tmp/10;
+                j++;
+            }
+            while(carry>0){
+                result.add(carry%10);
+                carry = carry/10;
+            }
+                
+            //System.out.println(result.toString());
+        }
+        Collections.reverse(result);
+        
+        ArrayList<Integer> end = new ArrayList<Integer>();
+        for(int i=0;i<result.size();i++){
+            end.add(result.get(i));
+        }
+        return end;
+    }
+}
+
+=========================================================================================
+
+Follow the steps below to solve the given problem:
+
+Create an array res[] of MAX size where MAX is a number of maximum digits in output. 
+Initialize value stored in res[] as 1 and initialize res_size (size of ‘res[]’) as 1. 
+Multiply x with res[] and update res[] and res_size to store the multiplication result for all the numbers from x = 2 to n.
+To multiply a number x with the number stored in res[], one by one multiply x with every digit of res[].
+To implement multiply function perform the following steps:
+  Initialize carry as 0. 
+  Do following for i = 0 to res_size – 1 
+    Find value of res[i] * x + carry. Let this value be prod. 
+    Update res[i] by storing the last digit of prod in it. 
+    Update carry by storing the remaining digits in carry. 
+  Put all digits of carry in res[] and increase res_size by the number of digits in carry.
+
+
+Below is the implementation of the above algorithm. 
+
+NOTE: In the below implementation, the maximum digits in the output are assumed as 500.
+To find a factorial of a much larger number ( > 254), 
+increase the size of an array or increase the value of MAX. 
+This can also be solved using Linked List instead of using res[] array which will not waste extra space.
+
+
+// JAVA program to compute factorial
+// of big numbers
+class GFG {
+ 
+    // This function finds factorial of
+    // large numbers and prints them
+    static void factorial(int n)
+    {
+        int res[] = new int[500];
+ 
+        // Initialize result
+        res[0] = 1;
+        int res_size = 1;
+ 
+        // Apply simple factorial formula
+        // n! = 1 * 2 * 3 * 4...*n
+        for (int x = 2; x <= n; x++)
+            res_size = multiply(x, res, res_size);
+ 
+        System.out.println("Factorial of given number is ");
+        for (int i = res_size - 1; i >= 0; i--)
+            System.out.print(res[i]);
+    }
+ 
+    // This function multiplies x with the number
+    // represented by res[]. res_size is size of res[] or
+    // number of digits in the number represented by res[].
+    // This function uses simple school mathematics for
+    // multiplication. This function may value of res_size
+    // and returns the new value of res_size
+    static int multiply(int x, int res[], int res_size)
+    {
+        int carry = 0; // Initialize carry
+ 
+        // One by one multiply n with individual
+        // digits of res[]
+        for (int i = 0; i < res_size; i++) {
+            int prod = res[i] * x + carry;
+            res[i] = prod % 10; // Store last digit of
+                                // 'prod' in res[]
+            carry = prod / 10; // Put rest in carry
+        }
+ 
+        // Put carry in res and increase result size
+        while (carry != 0) {
+            res[res_size] = carry % 10;
+            carry = carry / 10;
+            res_size++;
+        }
+        return res_size;
+    }
+ 
+    // Driver program
+    public static void main(String args[])
+    {
+        factorial(100);
+    }
+}
+// This code is contributed by Nikita Tiwari
+Output
+Factorial of given number is 
+93326215443944152681699238856266700490715968264381621468592963895217599993229915608941463976156518286253697920827223758251185210916864000000000000000000000000
+
+Time Complexity: O(N log (N!)), where O(N) is for loop and O(log N!) is for nested while loop
+Auxiliary Space: O(max(digits in factorial))
+
+==========================================================
+
+Find the Factorial of a large number using Basic BigInteger
+This problem can be solved using the below idea:
+
+Big Integer can also be used to calculate the factorial of large numbers.
+
+Illustration:
+
+N = 5
+
+ans = 1
+
+At i = 2: ans = ans x i = 1 x 2 = 2
+At i = 3: ans = ans x i = 2 x 3 = 6
+At i = 4: ans = ans x i = 6 x 4 = 24
+At i = 5: ans = ans x i = 24 x 5 = 120
+
+Hence factorial of N is 120
+
+Follow the steps below to solve the given problem: 
+
+Declare a BigInteger f with 1 and perform the conventional way of calcultaing factorial
+Traverse a loop from x = 2 to N and multiply x with f and store the resultant value in f
+Below is the implementation of the above idea : 
+
+
+// Java program to find large
+// factorials using BigInteger
+import java.math.BigInteger;
+import java.util.Scanner;
+ 
+public class Example {
+ 
+    // Returns Factorial of N
+    static BigInteger factorial(int N)
+    {
+        // Initialize result
+        BigInteger f
+            = new BigInteger("1"); // Or BigInteger.ONE
+ 
+        // Multiply f with 2, 3, ...N
+        for (int i = 2; i <= N; i++)
+            f = f.multiply(BigInteger.valueOf(i));
+ 
+        return f;
+    }
+ 
+    // Driver method
+    public static void main(String args[]) throws Exception
+    {
+        int N = 20;
+        System.out.println(factorial(N));
+    }
+}
+Output
+2432902008176640000
