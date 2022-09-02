@@ -1,0 +1,479 @@
+Given a N x N matrix, where every row and column is sorted in non-decreasing order. Find the kth smallest element in the matrix.
+
+Example 1:
+Input:
+N = 4
+mat[][] =     {{16, 28, 60, 64},
+                   {22, 41, 63, 91},
+                   {27, 50, 87, 93},
+                   {36, 78, 87, 94 }}
+K = 3
+Output: 27
+Explanation: 27 is the 3rd smallest element.
+ 
+
+Example 2:
+Input:
+N = 4
+mat[][] =     {{10, 20, 30, 40}
+                   {15, 25, 35, 45}
+                   {24, 29, 37, 48}
+                   {32, 33, 39, 50}}
+K = 7
+Output: 30
+Explanation: 30 is the 7th smallest element.
+
+
+Your Task:
+You don't need to read input or print anything. Complete the function kthsmallest() which 
+takes the mat, N and K as input parameters and returns the kth smallest element in the matrix.
+ 
+
+Expected Time Complexity: O(K*Log(N))
+Expected Auxiliary Space: O(N)
+
+ 
+
+Constraints:
+1 <= N <= 50
+1 <= mat[][] <= 10000
+1 <= K <= N*N
+
+
+MY_SOLUTION
+
+class Solution
+{
+	public static int kthSmallest(int[][]mat,int n,int k)
+	{
+        //code here.
+        //ArrayList<Integer> list = new ArrayList<>(); -> GIVES T.L.E
+        /*int[] list = new int[n * n];
+        int l = 0;
+         
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < n; j++){
+                list[l++] = mat[i][j];
+            }
+        }
+        
+         Arrays.sort(list);
+         
+         return list[k - 1];
+         */
+         
+         PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Collections.reverseOrder());
+         
+         for(int i = 0; i < n; i++){
+            for(int j = 0; j < n; j++){
+                maxHeap.add(mat[i][j]);
+                
+                if(maxHeap.size() > k){
+                    maxHeap.poll();
+                }
+            }
+        }
+        
+        return maxHeap.peek();
+         
+    }
+}
+
+===================================================================
+
+// https://www.geeksforgeeks.org/kth-smallest-element-in-a-row-wise-and-column-wise-sorted-2d-array-set-1/
+
+Approach: So the idea is to find the kth minimum element. Each row and each column is sorted.
+So it can be thought as C sorted lists and the lists have to be merged into a single list, the kth element of the list has to be found out. 
+So the approach is similar, the only difference is when the kth element is found the loop ends.
+Algorithm:
+
+The idea is to use min heap. Create a Min-Heap to store the elements
+Traverse the first row from start to end and build a min heap of elements from first row. A heap entry also stores row number and column number.
+Now Run a loop k times to extract min element from heap in each iteration
+Get minimum element (or root) from Min-Heap.
+Find row number and column number of the minimum element.
+Replace root with the next element from same column and min-heapify the root.
+Print the last extracted element, which is the kth minimum element
+Implementation:
+
+
+// Java program for kth largest element in a 2d
+// array sorted row-wise and column-wise
+class GFG{
+     
+// A structure to store entry of heap.
+// The entry contains value from 2D array,
+// row and column numbers of the value
+static class HeapNode
+{
+     
+    // Value to be stored
+    int val;
+     
+    // Row number of value in 2D array
+    int r;
+     
+    // Column number of value in 2D array
+    int c;
+     
+    HeapNode(int val, int r, int c)
+    {
+        this.val = val;
+        this.c = c;
+        this.r = r;
+    }
+}
+ 
+// A utility function to minheapify the node
+// harr[i] of a heap stored in harr[]
+static void minHeapify(HeapNode harr[],
+                       int i, int heap_size)
+{
+    int l = 2 * i + 1;
+    int r = 2 * i + 2;
+    int min = i;
+     
+    if(l < heap_size&& r<heap_size && harr[l].val < harr[i].val && harr[r].val < harr[i].val){
+            HeapNode temp=harr[r];
+            harr[r]=harr[i];
+            harr[i]=harr[l];
+            harr[l]=temp;
+            minHeapify(harr ,l,heap_size);
+            minHeapify(harr ,r,heap_size);
+        }
+          if (l < heap_size && harr[l].val < harr[i].val){
+            HeapNode temp=harr[i];           
+            harr[i]=harr[l];
+            harr[l]=temp;
+            minHeapify(harr ,l,heap_size);
+        }
+}
+ 
+// This function returns kth smallest
+// element in a 2D array mat[][]
+public static int kthSmallest(int[][] mat,int n, int k)
+{
+     
+    // k must be greater than 0 and
+    // smaller than n*n
+    if (k < 0 && k >= n * n)
+        return Integer.MAX_VALUE;
+     
+    // Create a min heap of elements
+    // from first row of 2D array
+    HeapNode harr[] = new HeapNode[n];
+     
+    for(int i = 0; i < n; i++)
+    {
+        harr[i] = new HeapNode(mat[0][i], 0, i);
+    }
+     
+    HeapNode hr = new HeapNode(0, 0, 0);
+     
+    for(int i = 1; i <= k; i++)
+    {
+         
+        // Get current heap root
+        hr = harr[0];
+         
+        // Get next value from column of root's
+        // value. If the value stored at root was
+        // last value in its column, then assign
+        // INFINITE as next value
+        int nextVal = hr.r < n - 1 ?
+                      mat[hr.r + 1][hr.c] :
+                      Integer.MAX_VALUE;
+                       
+        // Update heap root with next value
+        harr[0] = new HeapNode(nextVal,
+                               hr.r + 1, hr.c);
+                                
+        // Heapify root
+        minHeapify(harr, 0, n);
+    }
+     
+    // Return the value at last extracted root
+    return hr.val;
+}
+ 
+// Driver code
+public static void main(String args[])
+{
+    int mat[][] = { { 10, 20, 30, 40 },
+                    { 15, 25, 35, 45 },
+                    { 25, 29, 37, 48 },
+                    { 32, 33, 39, 50 } };
+                     
+    int res = kthSmallest(mat, 4, 7);
+     
+    System.out.print("7th smallest element is "+ res);
+}
+}
+ 
+// This code is contributed by Rishabh Chauhan
+Output
+7th smallest element is 30
+The codes above are contributed by RISHABH CHAUHAN.
+Complexity Analysis:
+
+Time Complexity: The above solution involves following steps. 
+Building a min-heap which takes O(n) time
+Heapify k times which takes O(k Logn) time.
+Auxiliary Space: O(R), where R is the length of a row, as the Min-Heap stores one row at a time.
+The above code can be optimized to build a heap of size k when k is smaller than n. In that case, the kth smallest element must be in first k rows and k columns. 
+We will soon be publishing more efficient algorithms for finding the kth smallest element. 
+This article is compiled by Ravi Gupta. Please write comments if you find anything incorrect, or you want to share more information about the topic discussed above
+ 
+
+Using inbuilt priority_queue :
+
+By using a comparator, we can carry out custom comparison in priority_queue. We will use priority_queue<pair<int,int>> for this.
+
+ Implementation : 
+
+
+// kth largest element in a 2d array sorted row-wise and
+// column-wise
+#include<bits/stdc++.h>
+using namespace std;
+ 
+int kthSmallest(int mat[4][4], int n, int k)
+{
+    // USING LAMBDA FUNCTION
+    // [=] IN LAMBDA FUNCTION IS FOR CAPTURING VARIABLES WHICH
+    // ARE OUT OF SCOPE i.e. mat[r]
+    // NOW, IT'LL COMPARE ELEMENTS OF HEAP BY ELEMENTS AT mat[first][second]
+      // Capturing the value of mat by reference to prevent copying
+    auto cmp = [&](pair<int,int> a,pair<int,int> b){
+        return mat[a.first][a.second] > mat[b.first][b.second];
+    };
+     
+    //DECLARING priority_queue AND PUSHING FIRST ROW IN IT
+    priority_queue<pair<int,int>,vector<pair<int,int>>,decltype(cmp)> pq(cmp);
+    for(int i=0; i<n; i++){
+        pq.push({i,0});
+    }
+     
+    //RUNNING LOOP FOR (k-1) TIMES
+    for(int i=1; i<k; i++){
+        auto p = pq.top();
+        pq.pop();
+         
+        //AFTER POPPING, WE'LL PUSH NEXT ELEMENT OF THE ROW IN THE HEAP
+        if(p.second+1 < n) pq.push({p.first,p.second + 1});
+    }
+    // ON THE k'th ITERATION, pq.top() will be our answer.
+    return mat[pq.top().first][pq.top().second];
+}
+ 
+// driver program to test above function
+int main()
+{
+    int mat[4][4] = {
+        { 10, 20, 30, 40 },
+        { 15, 25, 35, 45 },
+        { 25, 29, 37, 48 },
+        { 32, 33, 39, 50 },
+    };
+    cout << "7th smallest element is "
+        << kthSmallest(mat, 4, 7);
+    return 0;
+}
+Output
+7th smallest element is 30
+Time Complexity: O(n log n)
+
+Auxiliary Space: O(n)
+
+Using Binary Search over the Range:
+This approach uses binary search to iterate over possible solutions. We know that 
+
+answer >= mat[0][0]
+answer <= mat[N-1][N-1]
+So we do a binary search on this range and in each  iteration determine the no of elements greater than or equal to our current middle element. 
+The elements greater than or equal to current element can be found in O( n logn ) time using binary search.
+
+class GFG {
+ 
+  // This returns count of elements in
+  // matrix less than of equal to num
+  static int getElementsGreaterThanOrEqual(int num, int n, int mat[][])
+  {
+    int ans = 0;
+ 
+    for (int i = 0; i < n; i++)
+    {
+       
+      // if num is less than the first element
+      // then no more element in matrix
+      // further are less than or equal to num
+      if (mat[i][0] > num) {
+        return ans;
+      }
+       
+      // if num is greater than last element,
+      // it is greater than all elements
+      // in that row
+      if (mat[i][n - 1] <= num) {
+        ans += n;
+        continue;
+      }
+       
+      // This contain the col index of last element
+      // in matrix less than of equal
+      // to num
+      int greaterThan = 0;
+      for (int jump = n / 2; jump >= 1; jump /= 2) {
+        while (greaterThan + jump < n &&
+               mat[i][greaterThan + jump] <= num) {
+          greaterThan += jump;
+        }
+      }
+ 
+      ans += greaterThan + 1;
+    }
+    return ans;
+  }
+ 
+  // returns kth smallest index in the matrix
+  static int kthSmallest(int mat[][], int n, int k)
+  {
+     
+    // We know the answer lies between the first and the last element
+    // So do a binary search on answer based on the number of elements
+    // our current element is greater than the elements in the matrix
+    int l = mat[0][0], r = mat[n - 1][n - 1];
+ 
+    while (l <= r) {
+      int mid = l + (r - l) / 2;
+      int greaterThanOrEqualMid = getElementsGreaterThanOrEqual(mid, n, mat);
+ 
+      if (greaterThanOrEqualMid >= k)
+        r = mid - 1;
+      else
+        l = mid + 1;
+    }
+    return l;
+  }
+ 
+  public static void main(String args[]) {
+    int mat[][] = {
+      { 10, 20, 30, 40 },
+      { 15, 25, 35, 45 },
+      { 25, 29, 37, 48 },
+      { 32, 33, 39, 50 },
+    };
+    System.out.println("7th smallest element is " + kthSmallest(mat, 4, 7));
+  }
+ 
+}
+ 
+// This code is contributed by gfgking.
+Output: 
+
+7th smallest element is 30
+Complexity Analysis
+
+Time Complexity : O( y * n*logn)
+Where y =  log( abs(Mat[0][0] - Mat[n-1][n-1]) )
+We call the getElementsGreaterThanOrEqual function  log ( abs(Mat[0][0] – Mat[n-1][n-1])  ) times
+Time complexity of getElementsGreaterThanOrEqual is O(n logn) since there we do binary search n times.
+Auxiliary Space: O(1)
+USING ARRAY:
+
+We will make a new array and will copy all the contents of matrix in this array. 
+After that we will sort that array and find kth smallest element. This will be so easier.
+
+
+/*package whatever //do not write package name here */
+ 
+import java.io.*;
+import java.util.*;
+class GFG {
+    public static void main (String[] args) {
+         
+    int mat[][] = { { 10, 20, 30, 40 },
+                    { 15, 25, 35, 45 },
+                    { 25, 29, 37, 48 },
+                    { 32, 33, 39, 50 } };
+      int res = kthSmallest(mat, 4, 7);
+       
+    System.out.print("7th smallest element is "+ res);
+    }
+   
+   static int kthSmallest(int[][]mat,int n,int k)
+    {
+          
+       int[] a=new int[n*n];
+       int v=0;
+        
+       for(int i=0;i<n;i++){
+           for(int j=0;j<n;j++){
+               a[v]=mat[i][j];
+               v++;
+           }
+       }
+         
+        Arrays.sort(a);
+        int result=a[k-1];
+        return result;
+    }
+}
+Output
+7th smallest element is 30
+Time Complexity: O(n2) 
+Auxiliary Space: O(n2)
+
+Using Priority queue approach
+
+
+import java.util.*;
+public class Main {
+  public static int kthSmallest(int[][] matrix, int k)
+  {
+     
+    // n = size of matrix
+    int i, j, n = matrix.length;
+ 
+    // using built-in priority queue which acts as max
+    // Heap i.e. largest element will be on top
+    // Kth smallest element can also be seen as largest
+    // element in a priority queue of size k By this
+    // logic we pop elements from priority queue when
+    // its size becomes greater than k thus top of
+    // priority queue is kth smallest element in matrix
+ 
+    PriorityQueue<Integer> maxH = new PriorityQueue<>(
+      Collections.reverseOrder());
+    if (k == 1)
+      return matrix[0][0];
+ 
+    for (i = 0; i < n; i++) {
+      for (j = 0; j < n; j++) {
+        maxH.add(matrix[i][j]);
+        if (maxH.size() > k)
+          maxH.poll();
+      }
+    }
+ 
+    return maxH.peek();
+  }
+  public static void main(String[] args)
+  {
+    int[][] matrix = { { 1, 5, 9 },
+                      { 10, 11, 13 },
+                      { 12, 13, 15 } };
+    int k = 8;
+    System.out.print("8th smallest element is "
+                     + kthSmallest(matrix, k));
+  }
+}
+ 
+// This code is contributed by tapeshdua420.
+Output
+8th smallest element is 13
+Time Complexity: O(n2) 
+Auxiliary Space: O(n)
+
+
