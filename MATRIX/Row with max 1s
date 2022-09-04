@@ -1,0 +1,350 @@
+Given a boolean 2D array of n x m dimensions where each row is sorted. Find the 0-based index of the first row that has the maximum number of 1's.
+
+Example 1:
+
+Input: 
+N = 4 , M = 4
+Arr[][] = {{0, 1, 1, 1},
+           {0, 0, 1, 1},
+           {1, 1, 1, 1},
+           {0, 0, 0, 0}}
+Output: 2
+Explanation: Row 2 contains 4 1's (0-based
+indexing).
+
+Example 2:
+
+Input: 
+N = 2, M = 2
+Arr[][] = {{0, 0}, {1, 1}}
+Output: 1
+Explanation: Row 1 contains 2 1's (0-based
+indexing).
+
+Your Task:  
+You don't need to read input or print anything. 
+Your task is to complete the function rowWithMax1s() which takes the array of booleans arr[][], n and m as input parameters and returns the 0-based index 
+of the first row that has the most number of 1s. If no such row exists, return -1.
+ 
+
+Expected Time Complexity: O(N+M)
+Expected Auxiliary Space: O(1)
+
+
+Constraints:
+1 ≤ N, M ≤ 103
+0 ≤ Arr[i][j] ≤ 1 
+
+
+MY_SOLUTION
+class Solution {
+    int rowWithMax1s(int arr[][], int n, int m) {
+        // code here
+        int count = 0;
+        int row  = -1;
+        for(int i = 0; i < n; i++){
+            int curCount =  0;
+            for(int j = 0; j < m; j++){
+                if(arr[i][j] == 1) curCount++;
+            }
+            if(curCount > count){
+                count = curCount;
+                row = i;
+            }
+        }
+        return row;
+    }
+}
+====================================================================================================
+class Solution {
+    int rowWithMax1s(int arr[][], int n, int m) {
+        // code here
+        int r = 0;              // keeps track of row; starts at first row             
+        int c = m-1;            // keeps track of column; starts at last column
+        int max_row_index=-1;   // keeps track of result row index
+        
+        // starting from top right corner
+        // go left if you encounter 1
+        // do down if you encounter 0
+        while(r<n && c>=0)
+        {
+            if(arr[r][c]==1)
+            {
+                max_row_index = r;
+                c--;
+            }
+            else
+                r++;
+        }
+        return max_row_index;
+    }
+}
+
+=======================================================================================================
+A simple method is to do a row-wise traversal of the matrix, count the number of 1s in each row, and compare the count with max. 
+Finally, return the index of the row with maximum 1s. 
+The time complexity of this method is O(m*n) where m is the number of rows and n is the number of columns in the matrix.
+
+Implementation:
+
+// Java program for the above approach
+import java.util.*;
+
+class GFG {
+
+static int R = 4 ;
+static int C  = 4 ;
+
+// Function to find the index of first index 
+// of 1 in a boolean array arr[] 
+static int first(int arr[], int low, int high) 
+{ 
+    if(high >= low) 
+    { 
+        // Get the middle index 
+        int mid = low + (high - low)/2; 
+    
+        // Check if the element at middle index is first 1 
+        if ( ( mid == 0 || arr[mid-1] == 0) && arr[mid] == 1) 
+            return mid; 
+    
+        // If the element is 0, recur for right side 
+        else if (arr[mid] == 0) 
+            return first(arr, (mid + 1), high); 
+        
+        // If element is not first 1, recur for left side 
+        else
+            return first(arr, low, (mid -1)); 
+    } 
+    return -1; 
+} 
+
+// Function that returns index of row 
+// with maximum number of 1s. 
+static int rowWithMax1s(int mat[][]) 
+{ 
+    // Initialize max values 
+    int max_row_index = 0, max = -1; 
+
+    // Traverse for each row and count number of 1s 
+    // by finding the index of first 1 
+    int i, index; 
+    for (i = 0; i < R; i++) 
+    { 
+        index = first (mat[i], 0, C-1); 
+        if (index != -1 && C-index > max) 
+        { 
+            max = C - index; 
+            max_row_index = i; 
+        } 
+    } 
+
+    return max_row_index; 
+} 
+
+    // Driver Code
+    public static void main(String[] args) {
+        
+    int mat[][] = { {0, 0, 0, 1}, 
+                    {0, 1, 1, 1}, 
+                    {1, 1, 1, 1}, 
+                    {0, 0, 0, 0}}; 
+
+    System.out.print("Index of row with maximum 1s is " + rowWithMax1s(mat)); 
+
+    }
+}
+
+Output
+Index of row with maximum 1s is 2
+Time Complexity:  O(m*n)
+Space Complexity:  O(1)
+
+We can do better. Since each row is sorted, we can use Binary Search to count of 1s in each row. 
+We find the index of first instance of 1 in each row. The count of 1s will be equal to total number of columns minus the index of first 1.
+
+Implementation: See the following code for implementation of the above approach.  
+
+
+// Java program to find the row
+// with maximum number of 1s
+import java.io.*;
+
+class GFG {
+    static int R = 4, C = 4;
+    // Function to find the index of first index
+    // of 1 in a boolean array arr[] 
+    static int first(int arr[], int low, int high)
+    {
+        if (high >= low) {
+            // Get the middle index
+            int mid = low + (high - low) / 2;
+
+            // Check if the element at middle index is first 1
+            if ((mid == 0 || (arr[mid - 1] == 0)) && arr[mid] == 1)
+                return mid;
+
+            // If the element is 0, recur for right side
+            else if (arr[mid] == 0)
+                return first(arr, (mid + 1), high);
+                
+            // If element is not first 1, recur for left side
+            else 
+                return first(arr, low, (mid - 1));
+        }
+        return -1;
+    }
+
+    // Function that returns index of row
+    // with maximum number of 1s.
+    static int rowWithMax1s(int mat[][])
+    {
+        // Initialize max values
+        int max_row_index = 0, max = -1; 
+
+        // Traverse for each row and count number of 
+        // 1s by finding the index of first 1
+        int i, index;
+        for (i = 0; i < R; i++) {
+            index = first(mat[i], 0, C - 1);
+            if (index != -1 && C - index > max) {
+                max = C - index;
+                max_row_index = i;
+            }
+        }
+
+        return max_row_index;
+    }
+    // Driver Code
+    public static void main(String[] args)
+    {
+        int mat[][] = { { 0, 0, 0, 1 },
+                        { 0, 1, 1, 1 },
+                        { 1, 1, 1, 1 },
+                        { 0, 0, 0, 0 } };
+        System.out.println("Index of row with maximum 1s is "
+                                            + rowWithMax1s(mat));
+    }
+}
+
+// This code is contributed by 'Gitanjali'.
+
+Output
+Index of row with maximum 1s is 2
+
+Time Complexity: O(mLogn) where m is number of rows and n is number of columns in matrix.
+Auxiliary Space:  O(Log n), as implicit stack is created due to recursion.
+
+The above solution can be optimized further. 
+Instead of doing binary search in every row, we first check whether the row has more 1s than max so far. 
+If the row has more 1s, then only count 1s in the row. 
+Also, to count 1s in a row, we don't do binary search in complete row, we do search in before the index of last max. 
+
+Implementation: Following is an optimized version of the above solution.  
+
+public class gfg
+{
+  // The main function that returns index 
+  // of row with maximum number of 1s.  
+  static int rowWithMax1s(boolean mat[][])  
+  {  
+    int i, index;  
+
+    // Initialize max using values from first row.  
+    int max_row_index = 0;  
+    int max = first(mat[0], 0, C - 1);  
+
+    // Traverse for each row and count number of 1s  
+    // by finding the index of first 1  
+    for (i = 1; i < R; i++)  
+    {
+
+      // Count 1s in this row only if this row  
+      // has more 1s than max so far  
+
+      // Count 1s in this row only if this row  
+      // has more 1s than max so far  
+      if (max != -1 && mat[i][C - max - 1] == 1)  
+      {  
+        // Note the optimization here also  
+        index = first (mat[i], 0, C - max);  
+
+        if (index != -1 && C - index > max)  
+        {  
+          max = C - index;  
+          max_row_index = i;  
+        }  
+      }  
+      else
+      {  
+        max = first(mat[i], 0, C - 1);  
+      }  
+    }  
+    return max_row_index;  
+  }
+}
+
+// This code is contributed by divyesh072019.
+The worst case time complexity of the above optimized version is also O(mLogn), the will solution work better on average. 
+
+Thanks to Naveen Kumar Singh for suggesting the above solution. 
+
+The worst case of the above solution occurs for a matrix like following. 
+0 0 0 ... 0 1 
+0 0 0 ..0 1 1 
+0 ... 0 1 1 1 
+....0 1 1 1 1
+
+Following method works in O(m+n) time complexity in worst case. 
+
+Step1: Get the index of first (or leftmost) 1 in the first row.
+Step2: Do following for every row after the first row 
+...IF the element on left of previous leftmost 1 is 0, ignore this row. 
+...ELSE Move left until a 0 is found. Update the leftmost index to this index and max_row_index to be the current row.
+The time complexity is O(m+n) because we can possibly go as far left as we came ahead in the first step.
+Implementation: Following is the implementation of this method.
+
+// Java program to find the row
+// with maximum number of 1s
+import java.io.*;
+
+class GFG {
+    static int R = 4, C = 4;
+    // Function that returns index of row
+    // with maximum number of 1s.
+    static int rowWithMax1s(int mat[][])
+    {
+        // Initialize first row as row with max 1s
+        int j,max_row_index = 0;
+            j = C - 1;
+
+        for (int i = 0; i < R; i++) {
+            // Move left until a 0 is found
+            while (j >= 0 && mat[i][j] == 1) {
+                j = j - 1; // Update the index of leftmost 1
+                       // seen so far
+                max_row_index = i; // Update max_row_index
+            }
+        }
+          if(max_row_index==0&&mat[0][C-1]==0)
+              return -1;
+        return max_row_index;
+    }
+    // Driver Code
+    public static void main(String[] args)
+    {
+        int mat[][] = { { 0, 0, 0, 1 },
+                        { 0, 1, 1, 1 },
+                        { 1, 1, 1, 1 },
+                        { 0, 0, 0, 0 } };
+        System.out.println("Index of row with maximum 1s is "+ rowWithMax1s(mat));
+    }
+}
+
+// This code is contributed by 'Rishabh Chauhan'.
+
+Output
+Index of row with maximum 1s is 2
+Time Complexity: O(m+n) where m is number of rows and n is number of columns in matrix.
+Auxiliary Space:  O(1), as implicit stack is created due to recursion.
+ 
