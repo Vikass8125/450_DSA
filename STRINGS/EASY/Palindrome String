@@ -1,0 +1,277 @@
+Given a string S, check if it is palindrome or not.
+
+Example 1:
+
+Input: S = "abba"
+Output: 1
+Explanation: S is a palindrome
+Example 2:
+
+Input: S = "abc" 
+Output: 0
+Explanation: S is not a palindrome
+ 
+
+Your Task:
+You don't need to read input or print anything. Complete the function isPalindrome()which accepts string S and returns an integer value 1 or 0.
+
+Expected Time Complexity: O(Length of S)
+Expected Auxiliary Space: O(1)
+
+
+Constraints:
+1 <= Length of S<= 105
+
+MY_SOLUTION
+class Solution {
+    int isPalindrome(String S) {
+        // code here
+        /*
+        int low = 0;
+        int high = S.length() - 1;
+        while(low < high){
+            if(S.charAt(low) != S.charAt(high)) return 0;
+            low++;
+            high--;
+            
+        }
+        return 1
+        */
+        
+        StringBuilder stb = new StringBuilder(S);
+        stb.reverse();
+        return (S.equals(stb.toString())) ? 1 : 0;
+    }
+};
+
+=========================================================
+
+Naive Approach: By Reversing the given string and Comparing
+We can check if the given string is a palindrome by comparing the original string with its reversed version. 
+Below is the implementation of the above approach:
+
+
+/*package whatever //do not write package name here */
+ 
+import java.io.*;
+ 
+class GFG {
+    public static boolean isPalindrome(String str)
+    {
+        // Initializing an empty string to store the reverse
+        // of the original str
+        String rev = "";
+ 
+        // Initializing a new boolean variable for the
+        // answer
+        boolean ans = false;
+ 
+        for (int i = str.length() - 1; i >= 0; i--) {
+            rev = rev + str.charAt(i);
+        }
+ 
+        // Checking if both the strings are equal
+        if (str.equals(rev)) {
+            ans = true;
+        }
+        return ans;
+    }
+    public static void main(String[] args)
+    {
+        // Input string
+        String str = "geeks";
+ 
+        // Convert the string to lowercase
+        str = str.toLowerCase();
+        boolean A = isPalindrome(str);
+        System.out.println(A);
+    }
+}
+Output
+false
+In the above example, if we write ABba in place of abba, then also we should get the output as yes.
+So, we must change the case of the string to either lowercase or uppercase before we check it for a palindrome. 
+If we do not do this, we will get unexpected results. 
+This is because the compiler checks the characters based on their ASCII value and the ASCII value of A is not the same as a. 
+
+Approach: Our approach will be that we will first convert the string to lowercase. 
+Then, we will take two pointers i pointing to the start of the string and j pointing to the end of the string. 
+Keep incrementing i and decrementing j while i < j and at every step check whether the characters at these pointers are the same or not. 
+If not then the string is not a palindrome else it is.
+
+Example 1:
+
+
+// Java program to check whether a
+// string is a Palindrome
+// Using two pointing variables
+ 
+// Main class
+public class GFG {
+ 
+    // Method
+    // Returning true if string is palindrome
+    static boolean isPalindrome(String str)
+    {
+ 
+        // Pointers pointing to the beginning
+        // and the end of the string
+        int i = 0, j = str.length() - 1;
+ 
+        // While there are characters to compare
+        while (i < j) {
+ 
+            // If there is a mismatch
+            if (str.charAt(i) != str.charAt(j))
+                return false;
+ 
+            // Increment first pointer and
+            // decrement the other
+            i++;
+            j--;
+        }
+ 
+        // Given string is a palindrome
+        return true;
+    }
+ 
+    // Method 2
+    // main driver method
+    public static void main(String[] args)
+    {
+        // Input string
+        String str = "geeks";
+ 
+        //Convert the string to lowercase
+        str = str.toLowerCase();
+        // passing bool function till holding true
+        if (isPalindrome(str))
+ 
+            // It is a palindrome
+            System.out.print("Yes");
+        else
+ 
+            // Not a palindrome
+            System.out.print("No");
+    }
+}
+Output
+No
+Example 2:
+
+
+// Java Program to check Whether the String is Palindrome
+// or Not
+ 
+// Main class
+class GFG {
+ 
+    // Method 1
+    // Returns true if string is a palindrome
+    static boolean isPalindrome(String str)
+    {
+ 
+        // Pointers pointing to the beginning
+        // and the end of the string
+        int i = 0, j = str.length() - 1;
+ 
+        // While there are characters to compare
+        while (i < j) {
+ 
+            // If there is a mismatch
+            if (str.charAt(i) != str.charAt(j))
+                return false;
+ 
+            // Increment first pointer and
+            // decrement the other
+            i++;
+            j--;
+        }
+ 
+        // Given string is a palindrome
+        return true;
+    }
+ 
+    // Main driver method
+    public static void main(String[] args)
+    {
+        String str = "geeks";
+        String str2 = "RACEcar";
+       
+        //Change strings to lowercase
+        str = str.toLowerCase();
+        str2 = str2.toLowerCase();
+ 
+        // For string 1
+        System.out.print("String 1 :");
+ 
+        if (isPalindrome(str))
+            System.out.print("It is a palindrome");
+        else
+            System.out.print("It is not a palindrome");
+ 
+        // new line for better readability
+        System.out.println();
+ 
+        // For string 2
+        System.out.print("String 2 :");
+        if (isPalindrome(str2))
+            System.out.print("It is a palindrome");
+        else
+            System.out.print("It is not a palindrome");
+    }
+}
+Output
+String 1 :It is not a palindrome
+String 2 :It is a palindrome
+Recursive approach: The approach is very simple. 
+Just like the two-pointer approach, we will check the first and the last value of the string but this time it will be through recursion.
+
+We will take two pointers i pointing to the start of the string and j pointing to the end of the string. 
+Keep incrementing i and decrementing j while i < j and at every step 
+Check whether the characters at these pointers are the same or not. We are doing this through recursion – (i+1, j-1
+If all the characters are the same on the ith and jth index till i>=j condition satisfies, print true else false
+Below is the implementation of the above approach:
+
+
+//// Java program to check whether a
+// string is a Palindrome using recursion
+ 
+import java.io.*;
+ 
+class GFG {
+    public static boolean isPalindrome(int i, int j,
+                                       String A)
+    {
+        // comparing the two pointers
+        if (i >= j) {
+            return true;
+        }
+ 
+        // comparing the characters on those pointers
+        if (A.charAt(i) != A.charAt(j)) {
+            return false;
+        }
+ 
+        // checking everything again recursively
+        return isPalindrome(i + 1, j - 1, A);
+    }
+ 
+    public static boolean isPalindrome(String A)
+    {
+        return isPalindrome(0, A.length() - 1, A);
+    }
+ 
+    public static void main(String[] args)
+    {
+        // Input string
+        String A = "geeks";
+ 
+        // Convert the string to lowercase
+        A = A.toLowerCase();
+        boolean str = isPalindrome(A);
+        System.out.println(str);
+    }
+}
+Output
+false
