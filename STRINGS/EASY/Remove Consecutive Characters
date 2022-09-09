@@ -1,0 +1,238 @@
+Given a string S. For each index i(1<=i<=N-1), erase it if s[i] is equal to s[i-1] in the string.
+
+Example 1:
+
+Input:
+S = aabb
+Output:  ab 
+Explanation: 'a' at 2nd position is
+appearing 2nd time consecutively.
+Similiar explanation for b at
+4th position.
+
+Example 2:
+
+Input:
+S = aabaa
+Output:  aba
+Explanation: 'a' at 2nd position is
+appearing 2nd time consecutively.
+'a' at fifth position is appearing
+2nd time consecutively.
+ 
+
+Your Task:
+You dont need to read input or print anything. Complete the function removeConsecutiveCharacter() which accepts a string as input parameter
+and returns modified string.
+ 
+
+Expected Time Complexity: O(|S|).
+Expected Auxiliary Space: O(|S|).
+ 
+
+Constraints:
+1<=|S|<=105
+All characters are lowercase alphabets.
+
+MY_SOUTION
+
+class Solution{
+    public String removeConsecutiveCharacter(String S){
+        String res = "";
+        int start = 0;
+        int end = S.length();
+        while(start < end)
+        {
+            int idx = start + 1; 
+            while(idx < end &&  S.charAt(start) == S.charAt(idx)){
+                idx++;
+            }
+            res += S.charAt(start);
+            start = idx;
+        }
+        return res;
+        
+    }
+}
+=====================================================
+class Solution{
+   public String removeConsecutiveCharacter(String S){
+       
+       
+       StringBuilder sb = new StringBuilder();
+       sb.append(S.charAt(0));
+       for(int i =1; i<S.length();i++)
+       {
+           
+           if( S.charAt(i) != S.charAt(i-1))
+           {
+               sb.append(S.charAt(i));
+           }
+           
+       }
+        String joined = sb.toString();
+        return joined;
+   }
+}
+
+=====================================================
+
+class Solution{
+   public String removeConsecutiveCharacter(String S){
+       String ans="";
+       for(int i=0; i<S.length()-1; i++)
+       {
+           if(S.charAt(i)!=S.charAt(i+1))
+           {
+                ans+=S.charAt(i);
+           }
+       }
+       ans = ans + S.charAt(S.length()-1);
+       return ans;
+   }
+}
+
+===================================================
+
+preethiy2001
+4 weeks ago
+
+In place Solution(JAVA)
+
+ 
+
+class Solution{
+   public String removeConsecutiveCharacter(String S){
+       int low=0;
+       for(int i=1;i<S.length();i++){
+           if(S.charAt(i)!=S.charAt(i-1)){
+               ++low;
+                S=S.substring(0, low) + S.charAt(i)
+             + S.substring(low + 1);
+               
+           }
+       }return S.substring(0,low+1);
+   }
+}
+===================================================
+// https://www.geeksforgeeks.org/remove-consecutive-duplicates-string/
+
+Recursive Solution:
+
+The above problem can be solved using recursion.  
+
+If the string is empty, return.
+Else compare the adjacent characters of the string. If they are same then shift the characters one by one to the left. Call recursion on string S
+If they not same then call recursion from S+1 string.
+The recursion tree for the string S = aabcca is shown below.  
+
+        aabcca   S = aabcca
+        /
+       abcca     S = abcca        
+       /
+      bcca       S = abcca
+      /
+     cca         S = abcca
+     /
+    ca           S = abca
+   /
+  a              S = abca (Output String)
+ /
+empty string
+Below is the implementation of the above approach:  
+
+
+/*package whatever //do not write package name here */
+ 
+import java.io.*;
+ 
+class GFG {
+    public static String removeConsecutiveDuplicates(String input) {
+        if(input.length()<=1)
+            return input;
+        if(input.charAt(0)==input.charAt(1))
+            return removeConsecutiveDuplicates(input.substring(1));
+        else
+            return input.charAt(0) + removeConsecutiveDuplicates(input.substring(1));
+    }
+    public static void main(String[] args)
+    {
+        String S1 = "geeksforgeeks";
+        System.out.println(removeConsecutiveDuplicates(S1));
+   
+        String S2 = "aabcca";
+        System.out.println(removeConsecutiveDuplicates(S2));
+    }
+}
+Output
+geksforgeks
+abca
+The worst case time complexity of the above solution is O(n2). The worst case happens when all characters are same. 
+
+Iterative Solution :
+
+The idea is to check if current character is equal to the next character or not . 
+If current character is equal to the next character we’ll ignore it and when it is not equal we will add it to our answer. 
+Since, the last element will not checked we will push it at the end of the string. For eg: s=”aaaaa”
+
+when we run the loop str=”” so at the end we’ll add ‘a’ because it is the last element.
+
+Implementation:
+
+
+// Java program to remove consecutive
+// duplicates from a given string.
+import java.util.*;
+ 
+class GFG
+{
+ 
+    // A iterative function that removes
+    // consecutive duplicates from string S
+    static void removeDuplicates(char[] S)
+    {
+        int n = S.length;
+ 
+        // We don't need to do anything for
+        // empty or single character string.
+        if (n < 2)
+        {
+            return;
+        }
+ 
+        // j is used to store index is result
+        // string (or index of current distinct
+        // character)
+        int j = 0;
+ 
+        // Traversing string
+        for (int i = 1; i < n; i++)
+        {
+            // If current character S[i]
+            // is different from S[j]
+            if (S[j] != S[i])
+            {
+                j++;
+                S[j] = S[i];
+            }
+        }
+        System.out.println(Arrays.copyOfRange(S, 0, j + 1));
+    }
+ 
+    // Driver code
+    public static void main(String[] args)
+    {
+        char S1[] = "geeksforgeeks".toCharArray();
+        removeDuplicates(S1);
+ 
+        char S2[] = "aabcca".toCharArray();
+        removeDuplicates(S2);
+    }
+}
+ 
+/* This code contributed by PrinciRaj1992 */
+Output
+geksforgeks
+abca
+Time Complexity : O(n) 
+Auxiliary Space : O(1)
