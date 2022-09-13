@@ -1,0 +1,235 @@
+Consider a sample space S consisting of all perfect squares starting from 1, 4, 9 and so on.
+You are given a number N, you have to output the number of integers less than N in the sample space S.
+
+ 
+
+Example 1:
+
+Input :
+N = 9
+Output:
+2
+Explanation:
+1 and 4 are the only Perfect Squares
+less than 9. So, the Output is 2.
+Example 2:
+
+Input :
+N = 3
+Output:
+1
+Explanation:
+1 is the only Perfect Square
+less than 3. So, the Output is 1.
+ 
+
+Your Task:
+You don't need to read input or print anything. Your task is to complete the function countSquares() which takes an Integer N as input and returns the answer.
+
+ 
+
+Expected Time Complexity: O(sqrt(N))
+Expected Auxiliary Space: O(1)
+
+ 
+
+Constraints:
+1 <= N <= 108
+
+
+MY_SOLUTION
+
+class Solution {
+    static int countSquares(int N) {
+        // code here
+        /*
+        int count = 0;
+        for(int i = 1; i * i < N; i++){
+            count++;
+        }
+        return count;
+        */
+        int ans = (int)Math.sqrt(N-1);
+        
+        return ans;
+    }
+}
+=====================================================
+
+There can be many ways to solve this problem. For example, the Babylonian Method is one way.
+Simple Approach: To find the floor of the square root, try with all-natural numbers starting from 1. 
+Continue incrementing the number until the square of that number is greater than the given number.
+
+Algorithm: 
+Create a variable (counter) i and take care of some base cases, i.e when the given number is 0 or 1.
+Run a loop until i*i <= n , where n is the given number. Increment i by 1.
+The floor of the square root of the number is i – 1
+Implementation:
+
+// A Java program to find floor(sqrt(x))
+ 
+class GFG {
+     
+    // Returns floor of square root of x
+    static int floorSqrt(int x)
+    {
+        // Base cases
+        if (x == 0 || x == 1)
+            return x;
+ 
+        // Starting from 1, try all numbers until
+        // i*i is greater than or equal to x.
+        int i = 1, result = 1;
+         
+        while (result <= x) {
+            i++;
+            result = i * i;
+        }
+        return i - 1;
+    }
+ 
+    // Driver program
+    public static void main(String[] args)
+    {
+        int x = 11;
+        System.out.print(floorSqrt(x));
+    }
+}
+ 
+// This code is contributed by Smitha Dinesh Semwal.
+Output :
+
+3
+Complexity Analysis: 
+Time Complexity: O(√ n). 
+Only one traversal of the solution is needed, so the time complexity is O(√ n).
+Space Complexity: O(1). 
+Constant extra space is needed.
+Thanks Fattepur Mahesh for suggesting this solution. 
+Better Approach: The idea is to find the largest integer i whose square is less than or equal to the given number. 
+The idea is to use Binary Search to solve the problem. The values of i * i is monotonically increasing, so the problem can be solved using binary search. 
+
+Algorithm: 
+Take care of some base cases, i.e when the given number is 0 or 1.
+Create some variables, lowerbound l = 0, upperbound r = n, where n is the given number, mid and ans to store the answer.
+Run a loop until l <= r , the search space vanishes
+Check if the square of mid (mid = (l + r)/2 ) is less than or equal to n, 
+If yes then search for a larger value in second half of search space, i.e l = mid + 1, update ans = mid
+Else if the square of mid is more than n then search for a smaller value in first half of search space, i.e r = mid – 1
+Print the value of answer ( ans)
+Implementation:
+
+// A Java program to find floor(sqrt(x)
+public class Test
+{
+    public static int floorSqrt(int x)
+    {
+        // Base Cases
+        if (x == 0 || x == 1)
+            return x;
+ 
+ 
+        // Do Binary Search for floor(sqrt(x))
+        long start = 1, end = x, ans=0;
+        while (start <= end)
+        {
+            long mid = (start + end) / 2;
+ 
+            // If x is a perfect square
+            if (mid*mid == x)
+                return (int)mid;
+ 
+            // Since we need floor, we update answer when mid*mid is
+            // smaller than x, and move closer to sqrt(x)
+            if (mid*mid < x)
+            {
+                start = mid + 1;
+                ans = mid;
+            }
+            else   // If mid*mid is greater than x
+                end = mid-1;
+        }
+        return (int)ans;
+    }
+ 
+    // Driver Method
+    public static void main(String args[])
+    {
+        int x = 11;
+        System.out.println(floorSqrt(x));
+    }
+}
+// Contributed by InnerPeace
+Output :
+
+142
+Complexity Analysis: 
+Time complexity: O(log n). 
+The time complexity of the binary search is O(log n).
+Space Complexity: O(1). 
+Constant extra space is needed.
+Thanks to Gaurav Ahirwar for suggesting above method.
+Note: The Binary Search can be further optimized to start with ‘start’ = 0 and ‘end’ = x/2. 
+The floor of the square root of x cannot be more than x/2 when x > 1.
+Thanks to visit for suggesting the above optimization.
+
+Better Approach: The logic is simple as we can observe that for a perfect square number it’s square root 
+represent the total no of the perfect square from 1 to x.
+
+for ex:- sqrt(1)=1, sqrt(4)=2, sqrt(9)=3 …….. so on.
+
+Algorithm:
+    1. find the square root of x and store in a variable sqrt.
+
+    2. Use the floor value of sqrt and store in variable result, because for non-perfect square number. it’s floor value gives the result.
+
+    3. return the result.
+
+Implementation:
+
+import java.util.*;
+ 
+class GFG {
+    static int countSquares(int x) {
+        int sqr = (int) Math.sqrt(x);
+        int result = (int) (sqr);
+        return result;
+    }
+ 
+    public static void main(String[] args)
+    {
+        int x = 9;
+        System.out.print(countSquares(x));
+    }
+}
+ 
+// This code is contributed by Rajput-Ji
+Output:
+
+3
+Time complexity: O(log n)
+Auxiliary Space: O(1)
+
+Method:  Finding square root of an integer by using sqrt() function of math module.
+
+
+// Java program to find (sqrt(x))
+import java.util.*;
+ 
+class GFG {
+    public static void main(String[] args)
+    {
+        int n = 4;
+ 
+        // using the sqrt function of math
+        // module finding the square root integer
+        System.out.println((int)Math.sqrt(n));
+    }
+}
+ 
+// This code is contributed by phasing17
+Output
+2
+Complexity Analysis
+Time complexity:- O(log n)
+Auxiliary Space :-  O(1)
