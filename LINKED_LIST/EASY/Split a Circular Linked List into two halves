@@ -1,0 +1,201 @@
+Given a Cirular Linked List of size N, split it into two halves circular lists. 
+If there are odd number of nodes in the given circular linked list then out of the resulting two halved lists,
+first list should have one node more than the second list. The resultant lists should also be circular lists and not linear lists.
+
+ 
+
+Example 1:
+
+Input:
+Circular LinkedList: 1->5->7
+Output:
+1 5
+7
+ 
+
+Example 2:
+
+Input:
+Circular LinkedList: 2->6->1->5
+Output:
+2 6
+1 5
+
+Your Task:
+Your task is to complete the given function splitList(), which takes 3 input parameters: The address of the head of the linked list, 
+addresses of the head of the first and second halved resultant lists and Set the head1_ref and head2_ref to the first resultant list and 
+second resultant list respectively.
+
+
+Expected Time Complexity: O(N)
+Expected Auxilliary Space: O(1)
+
+
+Constraints:
+1 <= N <= 100
+
+
+MY_SOLUTION
+
+1) Store the mid and last pointers of the circular linked list using tortoise and hare algorithm. 
+2) Make the second half circular. 
+3) Make the first half circular. 
+4) Set head (or start) pointers of the two linked lists.
+In the below implementation, if there are odd nodes in the given circular linked list then the first result list has 1 more node than the second result list. 
+ 
+
+
+// Java program to delete a node from doubly linked list
+  
+class LinkedList {
+  
+    static Node head, head1, head2;
+  
+    static class Node {
+  
+        int data;
+        Node next, prev;
+  
+        Node(int d) {
+            data = d;
+            next = prev = null;
+        }
+    }
+  
+    /* Function to split a list (starting with head) into two lists.
+     head1_ref and head2_ref are references to head nodes of 
+     the two resultant linked lists */
+    void splitList() {
+        Node slow_ptr = head;
+        Node fast_ptr = head;
+  
+        if (head == null) {
+            return;
+        }
+  
+        /* If there are odd nodes in the circular list then
+         fast_ptr->next becomes head and for even nodes 
+         fast_ptr->next->next becomes head */
+        while (fast_ptr.next != head
+                && fast_ptr.next.next != head) {
+            fast_ptr = fast_ptr.next.next;
+            slow_ptr = slow_ptr.next;
+        }
+  
+        /* If there are even elements in list then move fast_ptr */
+        if (fast_ptr.next.next == head) {
+            fast_ptr = fast_ptr.next;
+        }
+  
+        /* Set the head pointer of first half */
+        head1 = head;
+  
+        /* Set the head pointer of second half */
+        if (head.next != head) {
+            head2 = slow_ptr.next;
+        }
+        /* Make second half circular */
+        fast_ptr.next = slow_ptr.next;
+  
+        /* Make first half circular */
+        slow_ptr.next = head;
+    }
+  
+    /* Function to print nodes in a given singly linked list */
+    void printList(Node node) {
+        Node temp = node;
+        if (node != null) {
+            do {
+                System.out.print(temp.data + " ");
+                temp = temp.next;
+            } while (temp != node);
+        }
+    }
+  
+    public static void main(String[] args) {
+        LinkedList list = new LinkedList();
+  
+        //Created linked list will be 12->56->2->11
+        list.head = new Node(12);
+        list.head.next = new Node(56);
+        list.head.next.next = new Node(2);
+        list.head.next.next.next = new Node(11);
+        list.head.next.next.next.next = list.head;
+  
+        System.out.println("Original Circular Linked list ");
+        list.printList(head);
+  
+        // Split the list
+        list.splitList();
+        System.out.println("");
+        System.out.println("First Circular List ");
+        list.printList(head1);
+        System.out.println("");
+        System.out.println("Second Circular List ");
+        list.printList(head2);
+          
+    }
+}
+
+Output: 
+ 
+
+Original Circular Linked List
+11 2 56 12 
+First Circular Linked List
+11 2 
+Second Circular Linked List
+56 12 
+Time Complexity: O(n) As we are only moving once through the list
+
+Auxiliary Space: O(1) As no extra space is used
+
+=====================================================================
+class gfg
+{
+        // Function  to split a circular LinkedList
+	    void splitList(circular_LinkedList list)
+        {
+            
+            //FINDING THE LENGTH OF C.L.LIST
+            Node start = list.head;
+    	    Node end = list.head;
+    	    int count = 1;
+    	    while(start != end.next){
+    	        end = end.next;
+    	        count++; 
+    	    }
+    	    
+    	    count = count % 2 == 0 ? count/2 : (count/2) + 1;
+    	    
+    	    
+    	    Node temp = list.head;
+    	    for(int i = 1; i < count; i++){
+    	        temp = temp.next;
+    	    }
+    	    
+    	    list.head1 = start;
+    	    list.head2 = temp.next;
+    	    temp.next = start;
+    	    end.next = list.head2;
+    	    
+	 }
+}
+======================================================
+// lets find the mid node 
+ Node slow = list.head ;
+       Node fast = list.head ;
+       while(fast.next != list.head && fast.next.next != list.head){
+           slow = slow.next ;
+           fast = fast.next.next ;
+       }
+       // the slow pointer points to the mid node 
+       // now we need to find the tail for second part of our list so that we can split it
+       list.head2 = slow.next ;
+       Node temp = slow.next ;
+       while(temp.next != list.head){
+           temp = temp.next ;
+       }
+       temp.next = list.head2 ;
+       slow.next = list.head ;
+       list.head1 = list.head ;
