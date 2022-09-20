@@ -1,0 +1,352 @@
+Given a doubly linked list of n elements. The task is to reverse the doubly linked list.
+
+Example 1:
+
+Input:
+LinkedList: 3 <--> 4 <--> 5
+Output: 5 4 3
+Example 2:
+
+Input:
+LinkedList: 75 <--> 122 <--> 59 <--> 196
+Output: 196 59 122 75
+Your Task:
+Your task is to complete the given function reverseDLL(), which takes head reference as argument and should reverse the elements
+so that the tail becomes the new head and all pointers are correctly pointed. You need to return the new head of the reversed list. 
+The printing and verification is done by the driver code.
+
+Expected Time Complexity: O(n).
+Expected Auxiliary Space: O(1).
+
+Constraints:
+1 <= number of nodes <= 103
+0 <= value of nodes <= 103
+
+
+MY_SOLUTION
+
+public static Node reverseDLL(Node  head)
+{
+    //Your code here
+    if(head == null || head.next == null) return head;
+    Node prev = null;
+    Node cur = head;
+    
+    while(cur != null){
+        Node next = cur.next;
+        cur.next = prev;
+        cur.prev = next;
+        prev = cur;
+        cur = next;
+    }
+    
+    return prev;
+    
+    
+}
+
+
+===============================================================
+public static Node reverseDLL(Node  head)
+{
+    //Your code here
+    
+    if(head == null || head.next == null)
+    return head;
+    
+    Node curr = head, prev = null;
+    
+    while(curr != null){
+        prev = curr.prev;
+        curr.prev = curr.next;
+        curr.next = prev;
+        
+        curr = curr.prev;
+    }
+    return prev.prev;
+}
+
+
+
+===============================================================
+
+//Using Swapping 
+public static Node reverseDLL(Node  head)
+{
+ if(head==null){
+        return null;
+    }
+    if(head.next==null){
+        return head;
+    }
+    int c=1;
+    Node tail=head;
+    while(tail.next!=null){
+        tail=tail.next;
+        c++;
+    }
+    // System.out.print(tail.data);
+    Node start=head;
+    int i=1;
+    while(i<=c/2){
+   int temp=start.data;
+   start.data=tail.data;
+   tail.data=temp;
+   tail=tail.prev;
+   start=start.next;
+   i++;
+    }
+  
+    return head;
+}
+
+
+
+
+===============================================================
+
+Follow the given steps to solve the problem using the above approach:
+
+Traverse the linked list using a pointer
+Swap the prev and next pointers for all nodes
+At last, change the head pointer of the doubly linked list
+Below is the implementation of the above approach:
+
+
+// Java program to reverse a doubly linked list
+ 
+class LinkedList {
+ 
+    static Node head;
+ 
+    static class Node {
+ 
+        int data;
+        Node next, prev;
+ 
+        Node(int d)
+        {
+            data = d;
+            next = prev = null;
+        }
+    }
+ 
+    /* Function to reverse a Doubly Linked List */
+    void reverse()
+    {
+        Node temp = null;
+        Node current = head;
+ 
+        /* swap next and prev for all nodes of
+         doubly linked list */
+        while (current != null) {
+            temp = current.prev;
+            current.prev = current.next;
+            current.next = temp;
+            current = current.prev;
+        }
+ 
+        /* Before changing head, check for the cases like
+         empty list and list with only one node */
+        if (temp != null) {
+            head = temp.prev;
+        }
+    }
+ 
+    /* UTILITY FUNCTIONS */
+    /* Function to insert a node at the beginning of the
+     * Doubly Linked List */
+    void push(int new_data)
+    {
+        /* allocate node */
+        Node new_node = new Node(new_data);
+ 
+        /* since we are adding at the beginning,
+         prev is always NULL */
+        new_node.prev = null;
+ 
+        /* link the old list off the new node */
+        new_node.next = head;
+ 
+        /* change prev of head node to new node */
+        if (head != null) {
+            head.prev = new_node;
+        }
+ 
+        /* move the head to point to the new node */
+        head = new_node;
+    }
+ 
+    /* Function to print nodes in a given doubly linked list
+     This function is same as printList() of singly linked
+     list */
+    void printList(Node node)
+    {
+        while (node != null) {
+            System.out.print(node.data + " ");
+            node = node.next;
+        }
+    }
+ 
+      // Driver's code
+    public static void main(String[] args)
+    {
+        LinkedList list = new LinkedList();
+ 
+        /* Let us create a sorted linked list to test the
+         functions Created linked list will be 10->8->4->2
+       */
+        list.push(2);
+        list.push(4);
+        list.push(8);
+        list.push(10);
+ 
+        System.out.println("Original linked list ");
+        list.printList(head);
+         
+          // Function call
+        list.reverse();
+       
+        System.out.println("");
+        System.out.println("The reversed Linked List is ");
+        list.printList(head);
+    }
+}
+ 
+Output
+Original Linked list
+10 8 4 2 
+Reversed Linked list
+2 4 8 10 
+Time Complexity: O(N), where N denotes the number of nodes in the doubly linked list.
+Auxiliary Space: O(1)
+
+We can also swap data instead of pointers to reverse the Doubly Linked List. Method used for reversing array can be used to swap data.
+Swapping data can be costly compared to pointers if the size of the data item(s) is more.
+
+==========================================================
+
+Reverse a Doubly Linked List using Stack:
+Push the node’s data into the stack while traversing the doubly linked list, then pop out the elements from the stack and copy the value to the 
+nodes of the linked list by again traversing it
+
+Follow the given steps to solve the problem using the above approach:
+
+Traverse the whole Linked List and  Keep pushing the node’s data into the stack
+Then keep popping the elements out of the stack and updating the Doubly Linked List
+Below is the implementation of the above approach:
+
+
+// Java program to reverse a doubly linked list
+import java.util.*;
+class LinkedList {
+ 
+    static Node head;
+ 
+    static class Node {
+ 
+        int data;
+        Node next, prev;
+ 
+        Node(int d)
+        {
+            data = d;
+            next = prev = null;
+        }
+    }
+ 
+    /* Function to reverse a Doubly Linked List using Stacks
+     */
+    void reverse()
+    {
+        Stack<Integer> stack = new Stack<>();
+        Node temp = head;
+        while (temp != null) {
+            stack.push(temp.data);
+            temp = temp.next;
+        }
+        // added all the elements sequence wise in the
+        // stack
+        temp = head;
+        while (temp != null) {
+            temp.data = stack.pop();
+            temp = temp.next;
+        }
+        // popped all the elements and the added in the
+        // linked list,
+        // which are in the reversed order.
+    }
+ 
+    /* UTILITY FUNCTIONS */
+    /* Function to insert a node at the beginning of the
+     * Doubly Linked List */
+    void push(int new_data)
+    {
+        /* allocate node */
+        Node new_node = new Node(new_data);
+ 
+        /* since we are adding at the beginning,
+         prev is always NULL */
+        new_node.prev = null;
+ 
+        /* link the old list off the new node */
+        new_node.next = head;
+ 
+        /* change prev of head node to new node */
+        if (head != null) {
+            head.prev = new_node;
+        }
+ 
+        /* move the head to point to the new node */
+        head = new_node;
+    }
+ 
+    /* Function to print nodes in a given doubly linked list
+     This function is same as printList() of singly linked
+     list */
+    void printList(Node node)
+    {
+        while (node != null) {
+            System.out.print(node.data + " ");
+            node = node.next;
+        }
+    }
+ 
+    // Driver Code
+    public static void main(String[] args)
+    {
+        LinkedList list = new LinkedList();
+ 
+        /* Let us create a sorted linked list to test the
+         functions Created linked list will be 10->8->4->2
+       */
+        list.push(2);
+        list.push(4);
+        list.push(8);
+        list.push(10);
+ 
+        System.out.println("Original linked list ");
+        list.printList(head);
+ 
+        list.reverse();
+        System.out.println("");
+        System.out.println("The reversed Linked List is ");
+        list.printList(head);
+    }
+}
+ 
+ 
+Output
+Original linked list 
+10 8 4 2 
+The reversed Linked List is 
+2 4 8 10
+Time Complexity: O(N)
+Auxiliary Space: O(N)
+
+
+
+
+
+
+===============================================================
