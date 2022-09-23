@@ -1,0 +1,572 @@
+Given a linked list of N nodes. The task is to reverse this list.
+
+Example 1:
+
+Input:
+LinkedList: 1->2->3->4->5->6
+Output: 6 5 4 3 2 1
+Explanation: After reversing the list, 
+elements are 6->5->4->3->2->1.
+Example 2:
+
+Input:
+LinkedList: 2->7->8->9->10
+Output: 10 9 8 7 2
+Explanation: After reversing the list,
+elements are 10->9->8->7->2.
+Your Task:
+The task is to complete the function reverseList() with head reference as the only argument and should return new head after reversing the list.
+
+Expected Time Complexity: O(N).
+Expected Auxiliary Space: O(1).
+
+Constraints:
+1 <= N <= 104
+
+ 
+
+//Full function Template for Java
+
+/* linked list node class:
+
+class Node {
+    int value;
+    Node next;
+    Node(int value) {
+        this.value = value;
+    }
+}
+
+*/
+
+class Solution
+{
+    //Function to reverse a linked list.
+    Node reverseList(Node head)
+    {
+        if(head == null)
+            return null;
+            
+        //taking three pointers to store the current, previous and next nodes.
+        Node prev = null;   
+        Node current = head;
+        Node next = current.next;
+        
+        while(current!=null)
+        {
+            //taking the next node as next.
+            next=current.next;
+            
+            //storing the previous node in link part of current node.
+            current.next=prev; 
+            
+            //updating prev from previous node to current node.
+            prev=current; 
+            
+            //updating current node to next node.
+            current =next;        
+        }
+        
+        return prev; 
+    }
+}
+
+
+===================================================
+
+Iterative Method 
+
+Initialize three pointers prev as NULL, curr as head and next as NULL.
+Iterate through the linked list. In loop, do following. 
+// Before changing next of current, 
+// store next node 
+next = curr->next
+// Now change next of current 
+// This is where actual reversing happens 
+curr->next = prev 
+// Move prev and curr one step forward 
+prev = curr 
+curr = next
+
+
+Below is the implementation of the above approach: 
+
+
+// Java program for reversing the linked list
+ 
+class LinkedList {
+ 
+    static Node head;
+ 
+    static class Node {
+ 
+        int data;
+        Node next;
+ 
+        Node(int d)
+        {
+            data = d;
+            next = null;
+        }
+    }
+ 
+    /* Function to reverse the linked list */
+    Node reverse(Node node)
+    {
+        Node prev = null;
+        Node current = node;
+        Node next = null;
+        while (current != null) {
+            next = current.next;
+            current.next = prev;
+            prev = current;
+            current = next;
+        }
+        node = prev;
+        return node;
+    }
+ 
+    // prints content of double linked list
+    void printList(Node node)
+    {
+        while (node != null) {
+            System.out.print(node.data + " ");
+            node = node.next;
+        }
+    }
+ 
+    // Driver Code
+    public static void main(String[] args)
+    {
+        LinkedList list = new LinkedList();
+        list.head = new Node(85);
+        list.head.next = new Node(15);
+        list.head.next.next = new Node(4);
+        list.head.next.next.next = new Node(20);
+ 
+        System.out.println("Given Linked list");
+        list.printList(head);
+        head = list.reverse(head);
+        System.out.println("");
+        System.out.println("Reversed linked list ");
+        list.printList(head);
+    }
+}
+ 
+Output: 
+
+Given linked list
+85 15 4 20 
+Reversed Linked list 
+20 4 15 85
+Time Complexity: O(n) 
+Auxiliary Space: O(1)
+
+=======================================================================
+
+
+Recursive Method: 
+
+   1) Divide the list in two parts - first node and 
+      rest of the linked list.
+   2) Call reverse for the rest of the linked list.
+   3) Link rest to first.
+   4) Fix head pointer
+Linked List Rverse
+
+
+// Recursive Java program to reverse
+// a linked list
+class recursion {
+    static Node head; // head of list
+     
+    static class Node {
+        int data;
+        Node next;
+        Node(int d)
+        {
+            data = d;
+            next = null;
+        }
+    }
+ 
+    static Node reverse(Node head)
+    {
+        if (head == null || head.next == null)
+            return head;
+ 
+        /* reverse the rest list and put
+        the first element at the end */
+        Node rest = reverse(head.next);
+        head.next.next = head;
+ 
+        /* tricky step -- see the diagram */
+        head.next = null;
+ 
+        /* fix the head pointer */
+        return rest;
+    }
+ 
+    /* Function to print linked list */
+    static void print()
+    {
+        Node temp = head;
+        while (temp != null) {
+            System.out.print(temp.data + " ");
+            temp = temp.next;
+        }
+        System.out.println();
+    }
+ 
+    static void push(int data)
+    {
+        Node temp = new Node(data);
+        temp.next = head;
+        head = temp;
+    }
+  
+ 
+/* Driver program to test above function*/
+public static void main(String args[])
+{
+    /* Start with the empty list */
+      
+    push(20);
+    push(4);
+    push(15);
+    push(85);
+ 
+    System.out.println("Given linked list");
+    print();
+ 
+    head = reverse(head);
+ 
+    System.out.println("Reversed Linked list");
+    print();
+}
+}
+ 
+Output: 
+
+Given linked list
+85 15 4 20 
+Reversed Linked list
+20 4 15 85
+Time Complexity: O(n) 
+Auxiliary Space: O(n)
+
+
+
+=======================================================================
+
+
+A Simpler and Tail Recursive Method 
+
+Below is the implementation of this method.  
+
+
+// Java program for reversing the Linked list
+ 
+class LinkedList {
+ 
+    static Node head;
+    static class Node {
+        int data;
+        Node next;
+        Node(int d)
+        {
+            data = d;
+            next = null;
+        }
+    }
+    // A simple and tail recursive function to reverse
+    // a linked list.  prev is passed as NULL initially.
+    Node reverseUtil(Node curr, Node prev)
+    {
+        /*If head is initially null OR list is empty*/
+        if (head == null)
+            return head;
+        /* If last node mark it head*/
+        if (curr.next == null) {
+            head = curr;
+            /* Update next to prev node */
+            curr.next = prev;
+            return head;
+        }
+        /* Save curr->next node for recursive call */
+        Node next1 = curr.next;
+        /* and update next ..*/
+        curr.next = prev;
+        reverseUtil(next1, curr);
+        return head;
+    }
+ 
+    // prints content of double linked list
+    void printList(Node node)
+    {
+        while (node != null) {
+            System.out.print(node.data + " ");
+            node = node.next;
+        }
+    }
+ 
+    // Driver Code
+    public static void main(String[] args)
+    {
+        LinkedList list = new LinkedList();
+        list.head = new Node(1);
+        list.head.next = new Node(2);
+        list.head.next.next = new Node(3);
+        list.head.next.next.next = new Node(4);
+        list.head.next.next.next.next = new Node(5);
+        list.head.next.next.next.next.next = new Node(6);
+        list.head.next.next.next.next.next.next = new Node(7);
+        list.head.next.next.next.next.next.next.next = new Node(8);
+ 
+        System.out.println("Original Linked list ");
+        list.printList(head);
+        Node res = list.reverseUtil(head, null);
+        System.out.println("");
+        System.out.println("");
+        System.out.println("Reversed linked list ");
+        list.printList(res);
+    }
+}
+ 
+
+
+Output
+Given linked list
+1 2 3 4 5 6 7 8 
+
+Reversed linked list
+8 7 6 5 4 3 2 1
+Time Complexity: O(N)
+
+As we do certain operation for every node of the linked list.
+
+Auxiliary Space: O(1)
+
+As constant extra space is used.
+
+
+
+=======================================================================
+
+
+=======================================================================
+
+
+Using Stack:
+
+Algorithm – 
+
+Store the nodes(values and address) in the stack until all the values are entered.
+Once all entries are done, Update the Head pointer to the last location(i.e the last value).
+Start popping the nodes(value and address) and store them in the same order until the stack is empty.
+Update the next pointer of last Node in the stack by NULL.
+Below is the implementation of the above approach:
+
+
+// Java program for above approach
+import java.util.*;
+ 
+class GFG {
+    // Create a class Node to enter values and address in the list
+    static class Node {
+        int data;
+        Node next;
+    };
+    static Node head = null;
+    // Function to reverse the linked list
+    static void reverseLL()
+    {
+ 
+        // Create a stack "s" of Node type
+        Stack<Node> s = new Stack<>();
+        Node temp = head;
+        while (temp.next != null) {
+            // Push all the nodes in to stack
+            s.add(temp);
+            temp = temp.next;
+        }
+        head = temp;
+        while (!s.isEmpty()) {
+            // Store the top value of stack in list
+            temp.next = s.peek();
+            // Pop the value from stack
+            s.pop();
+            // update the next pointer in the list
+            temp = temp.next;
+        }
+        temp.next = null;
+    }
+ 
+    // Function to Display the elements in List
+    static void printlist(Node temp)
+    {
+        while (temp != null) {
+            System.out.print(temp.data + " ");
+            temp = temp.next;
+        }
+    }
+ 
+    // Program to insert back of the linked list
+    static void insert_back(int value)
+    {
+        // we have used insertion at back method to enter
+        // values in the list.(eg: head.1.2.3.4.Null)
+        Node temp = new Node();
+        temp.data = value;
+        temp.next = null;
+        // If *head equals to null
+        if (head == null) {
+            head = temp;
+            return;
+        }
+        else {
+            Node last_node = head;
+            while (last_node.next != null)
+                last_node = last_node.next;
+            last_node.next = temp;
+            return;
+        }
+    }
+ 
+    // Driver Code
+    public static void main(String[] args)
+    {
+        insert_back(1);
+        insert_back(2);
+        insert_back(3);
+        insert_back(4);
+        System.out.print("Given linked list\n");
+        printlist(head);
+        reverseLL();
+        System.out.print("\nReversed linked list\n");
+        printlist(head);
+    }
+}
+ 
+Output
+Given linked list
+1 2 3 4 
+Reversed linked list
+4 3 2 1 
+
+Time Complexity: O(N)
+
+As we do certain operation for every node of the linked list.
+
+Auxiliary Space: O(N)
+
+Space is used to store the nodes in the stack.
+
+
+
+=======================================================================
+
+
+
+Using array:
+
+Algorithm :- 
+
+1. Create a linked list.
+
+2. Count the number of nodes present in the Linked List
+
+3. Initialize an array with the size of the count.
+
+4. Store the elements of the Linked list in array 
+
+5. Print the array from the last index to the first.
+
+
+// Java program of the above approach
+class GFG {
+ 
+    // Create a class Node to enter values and address in the list
+    static class node {
+        int val;
+        node next;
+    };
+ 
+    static node head = null;
+    // code to count the no. of nodes
+    static int count(node head)
+    {
+        node p = head;
+        int k = 1;
+        while (p != null) {
+            p = p.next;
+            k++;
+        }
+        return k;
+    }
+ 
+    // to reverse the linked list
+    static node ll_reverse(node head)
+    {
+        node p = head;
+        int i = count(head), j = 1;
+        int[] arr = new int[i];
+        while (i != 0 && p != null) {
+            arr[j++] = p.val;
+            p = p.next;
+            i--;
+        }
+        j--;
+        while (j != 0) // loop will break as soon as j=0
+            System.out.print(arr[j--] + " ");
+        return head;
+    }
+    // code to insert at end of ll
+    static node insert_end(node head, int data)
+    {
+        node q = head;
+        node p = new node();
+        p.val = data;
+        p.next = null;
+        while (q.next != null)
+            q = q.next;
+        q.next = p;
+        p.next = null;
+        return head;
+    }
+ 
+    // create ll
+    static node create_ll(node head, int data)
+    {
+        node p = new node();
+        p.next = null;
+        p.val = data;
+        if (head == null) {
+            head = p;
+            p.next = null;
+            return head;
+        }
+        else {
+            head = insert_end(head, data);
+            return head;
+        }
+    }
+ 
+    public static void main(String[] args)
+    {
+        int i = 5, j = 1;
+        while (i != 0) {
+            head = create_ll(head, j++);
+            i--;
+        }
+        head = ll_reverse(head);
+    }
+}
+ 
+Input :  1->2->3->4->5
+Output: 5->4->3->2->1
+
+Time complexity: O(N) as we visit every node once.
+Auxiliary Space: O(N) as extra space is used to store all the nodes in the array.
+
+
