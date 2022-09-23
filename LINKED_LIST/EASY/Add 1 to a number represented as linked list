@@ -1,0 +1,589 @@
+A number N is represented in Linked List such that each digit corresponds to a node in linked list. You need to add 1 to it.
+
+Example 1:
+
+Input:
+LinkedList: 4->5->6
+Output: 457 
+Example 2:
+
+Input:
+LinkedList: 1->2->3
+Output: 124 
+Your Task:
+Your task is to complete the function addOne() which takes the head of the linked list as the only argument and returns the head of the modified linked list.
+The driver code prints the number.
+Note: The head represents the left-most digit of the number.
+
+Expected Time Complexity: O(N).
+Expected Auxiliary Space: O(1).
+
+Constraints:
+1 <= N <= 101000
+
+MY_SOLUTION
+
+HINTS:
+-> Reverse given linked list. For example, 1-> 9-> 9 -> 9 is converted to 9-> 9 -> 9 ->1.
+-> Start traversing linked list from leftmost node and add 1 to it. 
+   If there is a carry, move to the next node. Keep moving to the next node while there is a carry.
+-> Reverse modified linked list and return head.
+
+class Solution
+{
+    public static Node reverse(Node head) 
+    // this function reverses the linked list
+    {
+        Node prev = null;
+        Node current = head;
+        Node next;
+        
+        while (current != null) 
+        { 
+            next = current.next;     // storing next node
+            current.next = prev;     // linking current node to previous
+            prev = current;           // updating prev
+            current = next;           // updating current
+        }
+        
+        return prev; 
+    } 
+
+    public static Node addOne(Node head) 
+    { 
+        head = reverse(head);           // reversing list to make addition easy
+        
+        Node current = head;
+        int carry = 1;
+        
+        while(carry!=0)
+        {
+            current.data += 1;         // adding one to current node
+            
+            if(current.data < 10)return reverse(head);
+                // if no carry we can reverse back list and return it
+            else current.data = 0;
+                // else we continue with taking carry forward
+            
+            if(current.next == null) break;
+                // if, end of list, we break from loop
+            else current = current.next;
+                // else we move to next node
+        }
+        
+        current.next = new Node(1);  // adding new node for the carried 1
+        return reverse(head);
+    }
+}
+===============================================================================================================
+
+class Solution
+{
+    public static Node addOne(Node head) 
+    { 
+        Node rev = reverse(head);
+        
+        Node curr = rev;
+        Node prev = null;
+        
+        int carry = 1;
+        
+        while(curr != null){
+            int value = curr.data + carry;
+            curr.data = value % 10;
+            carry = value/10;
+            prev = curr;
+            curr = curr.next;
+        }
+        
+        if(carry != 0){
+            prev.next = new Node(carry);
+        }
+        
+        return reverse(rev);
+        
+       
+    }
+    
+    public static Node reverse(Node head){
+        
+        Node prev = null;
+        Node cur = head;
+        
+        while(cur != null){
+            Node next = cur.next;
+            cur.next = prev;
+            prev = cur;
+            cur = next;
+        }
+        return prev;
+        
+    }
+}
+
+===============================================
+class Solution
+{
+     static Node reverse(Node head){
+         
+         
+         Node curr=head;
+         Node prev=null;
+         
+         while(curr!=null){
+             
+             Node temp=curr.next;
+             curr.next=prev;
+             prev=curr;
+             curr=temp;
+         }
+         return prev;
+     }
+     
+     
+    public static Node addOne(Node head) 
+    { 
+         
+         if(head==null) return null;
+         Node temp=head;
+         Node rev=reverse(temp);
+          Node curr=rev;
+          Node beforend=rev;
+           int carry=0;
+         //check first the  Node value in reverse linked list 
+         if(rev.data!=9){
+              rev.data+=1;
+              return reverse(rev);
+         }
+         // first the  Node value is Not 9 
+         else{
+              int x=curr.data+1;
+               carry=x/10;
+                curr.data=x%10;
+                curr=curr.next;
+             while(curr!=null){
+                     x=curr.data+carry;
+                    carry=x/10;
+                    curr.data=x%10;
+                    beforend=curr;
+                   curr=curr.next;
+             }
+         }
+         if(carry>0){
+             
+             Node newNode=new Node(0);
+             newNode.data=carry;
+             newNode.next=null;
+             beforend.next=newNode;
+         }
+         
+         
+         return reverse(rev);
+    }
+           
+}
+
+
+===============================================
+
+public static Node addOne(Node head) 
+   { 
+    
+      Node pre = null;
+       while(head!=null){
+         Node temp1 = head.next;
+         head.next = pre;
+         pre = head;
+         head= temp1;
+     }
+         Node temp = pre;
+         Node prev = null;
+     
+     while(temp!=null){
+         
+         if(temp.data +1 >=10){
+             temp.data = 0;
+             prev  = temp;
+             temp=temp.next;
+         }
+         else{
+             temp.data = temp.data +1;
+             break;
+         }
+     }
+     
+     if(temp==null){
+         Node n = new Node(1);
+         prev.next = n;
+     }
+     Node ans = null;
+     
+          while(pre!=null){
+         Node temp1 = pre.next;
+         pre.next = ans;
+         ans = pre;
+         pre= temp1;
+     }
+     
+     return ans;
+     
+     
+   }
+
+
+
+===============================================
+
+Below are the steps : 
+
+Reverse given linked list. For example, 1-> 9-> 9 -> 9 is converted to 9-> 9 -> 9 ->1.
+Start traversing linked list from leftmost node and add 1 to it. 
+If there is a carry, move to the next node. Keep moving to the next node while there is a carry.
+Reverse modified linked list and return head.
+Complete Interview Preparation - GFG
+
+Below is the implementation of above steps. 
+
+
+// Java program to add 1 to a linked list
+class GfG {
+  
+    /* Linked list node */
+    static class Node {
+        int data;
+        Node next;
+    }
+  
+    /* Function to create a new node with given data */
+    static Node newNode(int data)
+    {
+        Node new_node = new Node();
+        new_node.data = data;
+        new_node.next = null;
+        return new_node;
+    }
+  
+    /* Function to reverse the linked list */
+    static Node reverse(Node head)
+    {
+        Node prev = null;
+        Node current = head;
+        Node next = null;
+        while (current != null) {
+            next = current.next;
+            current.next = prev;
+            prev = current;
+            current = next;
+        }
+        return prev;
+    }
+  
+    /* Adds one to a linked lists and return the head
+    node of resultant list */
+    static Node addOneUtil(Node head)
+    {
+        // res is head node of the resultant list
+        Node res = head;
+        Node temp = null, prev = null;
+  
+        int carry = 1, sum;
+  
+        while (head != null) // while both lists exist
+        {
+            // Calculate value of next digit in resultant
+            // list. The next digit is sum of following
+            // things (i) Carry (ii) Next digit of head list
+            // (if there is a next digit)
+            sum = carry + head.data;
+  
+            // update carry for next calculation
+            carry = (sum >= 10) ? 1 : 0;
+  
+            // update sum if it is greater than 10
+            sum = sum % 10;
+  
+            // Create a new node with sum as data
+            head.data = sum;
+  
+            // Move head and second pointers to next nodes
+            temp = head;
+            head = head.next;
+        }
+  
+        // if some carry is still there, add a new node to
+        // result list.
+        if (carry > 0)
+            temp.next = newNode(carry);
+  
+        // return head of the resultant list
+        return res;
+    }
+  
+    // This function mainly uses addOneUtil().
+    static Node addOne(Node head)
+    {
+        // Reverse linked list
+        head = reverse(head);
+  
+        // Add one from left to right of reversed
+        // list
+        head = addOneUtil(head);
+  
+        // Reverse the modified list
+        return reverse(head);
+    }
+  
+    // A utility function to print a linked list
+    static void printList(Node node)
+    {
+        while (node != null) {
+            System.out.print(node.data);
+            node = node.next;
+        }
+        System.out.println();
+    }
+  
+    /* Driver code */
+    public static void main(String[] args)
+    {
+        Node head = newNode(1);
+        head.next = newNode(9);
+        head.next.next = newNode(9);
+        head.next.next.next = newNode(9);
+  
+        System.out.print("List is ");
+        printList(head);
+  
+        head = addOne(head);
+        System.out.println();
+        System.out.print("Resultant list is ");
+        printList(head);
+    }
+}
+  
+Output
+List is 1999
+
+Resultant list is 2000
+Time Complexity: O(n)
+
+Here n is the number of nodes in the linked list.
+
+Auxiliary Space: O(1)
+
+As constant extra space is used.
+
+===========================================
+
+Recursive Implementation: 
+We can recursively reach the last node and forward carry to previous nodes. 
+Recursive solution doesn’t require reversing of linked list. We can also use a stack in place of recursion to temporarily hold nodes.
+
+Below is the implementation of recursive solution.
+
+
+// Recursive Java program to add 1 to a linked list
+class GfG {
+  
+    /* Linked list node */
+    static class Node
+    {
+        int data;
+        Node next;
+    }
+  
+    /* Function to create a new node with given data */
+    static Node newNode(int data) 
+    {
+        Node new_node = new Node();
+        new_node.data = data;
+        new_node.next = null;
+        return new_node;
+    }
+  
+    // Recursively add 1 from end to beginning and returns
+    // carry after all nodes are processed.
+    static int addWithCarry(Node head)
+    {
+  
+        // If linked list is empty, then
+        // return carry
+        if (head == null)
+            return 1;
+  
+        // Add carry returned be next node call
+        int res = head.data + addWithCarry(head.next);
+  
+        // Update data and return new carry
+        head.data = (res) % 10;
+        return (res) / 10;
+    }
+  
+    // This function mainly uses addWithCarry(). 
+    static Node addOne(Node head)
+    {
+  
+        // Add 1 to linked list from end to beginning
+        int carry = addWithCarry(head);
+  
+        // If there is carry after processing all nodes,
+        // then we need to add a new node to linked list
+        if (carry > 0)
+        {
+            Node newNode = newNode(carry);
+            newNode.next = head;
+            return newNode; // New node becomes head now
+        }
+  
+        return head;
+    }
+  
+    // A utility function to print a linked list
+    static void printList(Node node)
+    {
+        while (node != null)
+        {
+            System.out.print(node.data);
+            node = node.next;
+        }
+        System.out.println();
+    }
+  
+    /* Driver code */
+    public static void main(String[] args)
+    {
+        Node head = newNode(1);
+        head.next = newNode(9);
+        head.next.next = newNode(9);
+        head.next.next.next = newNode(9);
+  
+        System.out.print("List is ");
+        printList(head);
+  
+        head = addOne(head);
+        System.out.println();
+        System.out.print("Resultant list is ");
+        printList(head);
+    }
+}
+  
+Output
+List is 1999
+
+Resultant list is 2000
+Time Complexity: O(n)
+
+Here n is the number of nodes in the linked list.
+
+Auxiliary Space: O(n)
+
+The extra space is used in recursion call stack.
+
+===============================================
+
+Simple approach and easy implementation: 
+  The idea is to store the last non 9 digit pointer so that if the last pointer is zero we can replace all the nodes after 
+  stored node(which contains the location of last digit before 9) to 0 and add the value of the stored node by 1
+
+
+// Recursive Java program to add 1 to a linked list
+class GFG{
+  
+// Linked list node
+static class Node
+{
+    int data;
+    Node next;
+}
+  
+// Function to create a new node with given data
+static Node newNode(int data)
+{
+    Node new_node = new Node();
+    new_node.data = data;
+    new_node.next = null;
+    return new_node;
+}
+  
+static Node addOne(Node head)
+{
+      
+    // Return head of list after adding one
+    Node ln = head;
+      
+    if (head.next == null)
+    {
+        head.data += 1;
+        return head;
+    }
+  
+    Node t = head;
+    int prev;
+  
+    while (t.next != null) 
+    {
+        if (t.data != 9) 
+        {
+            ln = t;
+        }
+        t = t.next;
+    }
+    if (t.data == 9 && ln != null)
+    {
+        t = ln;
+        t.data += 1;
+        t = t.next;
+        while (t != null) 
+        {
+            t.data = 0;
+            t = t.next;
+        }
+    }
+    else 
+    {
+        t.data += 1;
+    }
+    return head;
+}
+  
+// A utility function to print a linked list
+static void printList(Node node)
+{
+    while (node != null) 
+    {
+        System.out.print(node.data);
+        node = node.next;
+    }
+    System.out.println();
+}
+  
+// Driver code 
+public static void main(String[] args)
+{
+    Node head = newNode(1);
+    head.next = newNode(9);
+    head.next.next = newNode(9);
+    head.next.next.next = newNode(9);
+  
+    System.out.print("List is ");
+    printList(head);
+  
+    head = addOne(head);
+    System.out.println();
+    System.out.print("Resultant list is ");
+    printList(head);
+}
+}
+  
+Output
+List is 1999
+
+Resultant list is 2000
+Time Complexity: O(n)
+
+Here n is the number of nodes in the linked list.
+
+Auxiliary Space: O(1)
+
+As constant extra space is used.
+
