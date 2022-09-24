@@ -1,0 +1,685 @@
+Given a binary tree. The task is to check whether the given tree follows the max heap property or not.
+Note: Properties of a tree to be a max heap - Completeness and Value of node greater than or equal to its child.
+
+Example 1:
+
+Input:
+      5
+    /  \
+   2    3
+Output: 1
+Explanation: The given tree follows max-heap property since 5,
+is root and it is greater than both its children.
+
+Example 2:
+
+Input:
+       10
+     /   \
+    20   30 
+  /   \
+ 40   60
+Output: 0
+
+Your Task:
+You don't need to read input or print anything. Your task is to complete the function isHeap() which takes the root of Binary Tree as parameter
+returns True if the given binary tree is a heap else returns False.
+
+Expected Time Complexity: O(N)
+Expected Space Complexity: O(N)
+
+Constraints:
+1 ≤ Number of nodes ≤ 100
+1 ≤ Data of a node ≤ 1000
+
+// Back-end Complete Function template for JAVA
+
+MY_SOLUTION
+
+class Solution {
+    int countNodes(Node root) {
+        if (root == null) return 0;
+        return (1 + countNodes(root.left) + countNodes(root.right));
+    }
+
+    boolean isValid(Node tree, int level, int no) {
+        if (tree == null) return true;
+        if (level >= no) return false;
+        return isValid(tree.left, 2 * level + 1, no) &&
+               isValid(tree.right, 2 * level + 2, no);
+    }
+
+    boolean propHoldes(Node root) {
+        if (root.left == null && root.right == null) return true;
+        if (root.right == null)
+            return root.data > root.left.data;
+        else {
+            if (root.data >= root.left.data && root.data >= root.right.data)
+                return propHoldes(root.left) && propHoldes(root.right);
+            else
+                return false;
+        }
+    }
+    boolean isHeap(Node tree) {
+        if (tree == null) return true;
+        int no_of_nodes = countNodes(tree);
+
+        if (isValid(tree, 0, no_of_nodes) == true && propHoldes(tree) == true)
+            return true;
+        return false;
+    }
+}
+==============================================================================
+class Solution {
+      public static int totalCount(Node root) {
+
+        if(root == null) {
+
+            return 0 ;
+
+        }
+
+        int left = totalCount(root.left) ; 
+
+        int right = totalCount(root.right) ; 
+
+        return (left + right) +1 ; 
+
+    }
+
+    public static boolean isCBT(Node root, int index, int totalCount) {
+
+        if(root == null) {
+
+            return true ; 
+
+        }
+
+        if(index>= totalCount) {
+
+            return false ; 
+
+        }
+
+        else {
+
+            boolean left = isCBT(root.left, 2*index+1, totalCount) ; 
+
+            boolean right = isCBT(root.right, 2*index+2, totalCount) ; 
+
+            return (left && right) ; 
+
+        }
+
+    }
+
+    public static boolean isMaxHeap(Node root) {
+
+        if(root.left == null && root.right == null) {
+
+            return true ; 
+
+        }
+
+        if(root.right == null) {
+
+            return root.data > root.left.data ; 
+
+        }
+
+        else {
+
+            boolean left = isMaxHeap(root.left) ; 
+
+            boolean right = isMaxHeap(root.right) ; 
+
+            if(left && right && root.data > root.left.data && root.data > root.right.data) {
+
+                return true ; 
+
+            }
+
+    }
+
+    return false ;
+
+    }
+
+    boolean isHeap(Node root) {
+
+       int index =0 ;
+
+       int totalCount = totalCount(root) ; 
+
+       if(isCBT(root, index, totalCount) && isMaxHeap(root)){
+
+           return true ; 
+
+       }
+
+       else{
+
+           return false ;
+
+       }
+
+    }
+}
+
+
+================================================================
+
+Given a binary tree, check if it has heap property or not, Binary tree needs to fulfill the following two conditions for being a heap – 
+
+It should be a complete tree (i.e. all levels except the last should be full).
+Every node’s value should be greater than or equal to its child node (considering max-heap).
+Examples:
+
+Input: 
+
+yes
+
+Output: Given binary tree is a heap 
+
+Input: 
+
+no
+
+Output: Given binary tree is not a heap
+================
+
+
+Check if a given Binary Tree is Heap using Complete Binary Tree
+
+Follow the given steps to solve the problem:
+
+-> Check each of the above conditions separately, for checking completeness isComplete and for checking heap isHeapUtil functions are written. 
+-> First, check if the given binary tree is complete or not.
+-> Then to check if the binary tree is a heap or not, check the following points:
+    -> Every Node has 2 children, 0 children (last level nodes), or 1 child (there can be at most one such node).
+    -> If Node has No children then it’s a leaf node and returns true (Base case)
+    -> If Node has one child (it must be the left child because it is a complete tree) then compare this node with its single child only.
+    -> If the Node has both children then check heap property at this Node and recur for both subtrees. 
+
+
+Below is the implementation of the above approach:
+
+/* Java program to checks
+ * if a binary tree is max heap or not */
+
+// A Binary Tree node
+class Node {
+    int key;
+    Node left, right;
+
+    Node(int k)
+    {
+        key = k;
+        left = right = null;
+    }
+}
+
+class Is_BinaryTree_MaxHeap {
+    /* This function counts
+       the number of nodes in a binary
+     * tree */
+    int countNodes(Node root)
+    {
+        if (root == null)
+            return 0;
+        return (1 + countNodes(root.left)
+                + countNodes(root.right));
+    }
+
+    /* This function checks
+       if the binary tree is complete
+     * or not */
+    boolean isCompleteUtil(Node root, int index,
+                           int number_nodes)
+    {
+        // An empty tree is complete
+        if (root == null)
+            return true;
+
+        // If index assigned to current
+        //  node is more than number of
+        //  nodes in tree,  then tree is
+        // not complete
+        if (index >= number_nodes)
+            return false;
+
+        // Recur for left and right subtrees
+        return isCompleteUtil(root.left, 2 * index + 1,
+                              number_nodes)
+            && isCompleteUtil(root.right, 2 * index + 2,
+                              number_nodes);
+    }
+
+    // This Function checks
+    // the heap property in the tree.
+    boolean isHeapUtil(Node root)
+    {
+        //  Base case : single
+        // node satisfies property
+        if (root.left == null && root.right == null)
+            return true;
+
+        //  node will be in second last level
+        if (root.right == null) {
+            //  check heap property at Node
+            //  No recursive call ,
+            //  because no need to check last level
+            return root.key >= root.left.key;
+        }
+        else {
+            //  Check heap property at Node and
+            //  Recursive check heap property at left and
+            //  right subtree
+            if (root.key >= root.left.key
+                && root.key >= root.right.key)
+                return isHeapUtil(root.left)
+                    && isHeapUtil(root.right);
+            else
+                return false;
+        }
+    }
+
+    //  Function to check binary
+    // tree is a Heap or Not.
+    boolean isHeap(Node root)
+    {
+        if (root == null)
+            return true;
+
+        // These two are used
+        // in isCompleteUtil()
+        int node_count = countNodes(root);
+
+        if (isCompleteUtil(root, 0, node_count) == true
+            && isHeapUtil(root) == true)
+            return true;
+        return false;
+    }
+
+    // driver function to
+    // test the above functions
+    public static void main(String args[])
+    {
+        Is_BinaryTree_MaxHeap bt
+            = new Is_BinaryTree_MaxHeap();
+
+        Node root = new Node(10);
+        root.left = new Node(9);
+        root.right = new Node(8);
+        root.left.left = new Node(7);
+        root.left.right = new Node(6);
+        root.right.left = new Node(5);
+        root.right.right = new Node(4);
+        root.left.left.left = new Node(3);
+        root.left.left.right = new Node(2);
+        root.left.right.left = new Node(1);
+
+        if (bt.isHeap(root) == true)
+            System.out.println(
+                "Given binary tree is a Heap");
+        else
+            System.out.println(
+                "Given binary tree is not a Heap");
+    }
+}
+
+
+Output
+Given binary tree is a Heap
+Time Complexity: O(N), where N is the number of nodes
+Auxiliary Space: O(1)
+
+===========================================================
+
+Check if a given Binary Tree is Heap using Level Order Traversal:
+
+Level order traversal can be used to check heap properties at each level of the binary tree.
+Check whether value of each node is greater than the value of its children and keep track of when the last node is encountered and whether it is
+following the heap properties using a boolean flag 
+
+Follow the given steps to solve the problem:
+
+-> declare a queue for level order traversal and a flag variable nullish equal to false
+-> Start level order traversal 
+    -> Check for the left child of the node and if either the nullish is true or root's value is less than its left child node, then return false, 
+       else push this node into the queue
+    -> If the node's left child is null then set nullish equal to true, which means we have already encountered the last node, 
+       as the node with only zero or one children can occur only once in the complete tree
+    -> Now check the right child of the node and if either the nullish is true or root's value is less than its right child node, 
+       then return false, else push this node into the queue.
+    -> If the node's right child is null then set nullish equal to true, which means we have already encountered the last node, 
+       as the node with only zero or one children can occur only once in the complete tree
+    -> Return true after checking every node in the level order traversal
+
+// Java program to checks if a
+// binary tree is max heap or not
+
+import java.util.*;
+class GFG {
+
+    // Tree node structure
+    static class Node {
+        int data;
+        Node left;
+        Node right;
+    };
+
+    // To add a new node
+    static Node newNode(int k)
+    {
+        Node node = new Node();
+        node.data = k;
+        node.right = node.left = null;
+        return node;
+    }
+
+    static boolean isHeap(Node root)
+    {
+        Queue<Node> q = new LinkedList<>();
+        q.add(root);
+        boolean nullish = false;
+        while (!q.isEmpty()) {
+            Node temp = q.peek();
+            q.remove();
+            if (temp.left != null) {
+                if (nullish || temp.left.data > temp.data) {
+                    return false;
+                }
+                q.add(temp.left);
+            }
+            else {
+                nullish = true;
+            }
+            if (temp.right != null) {
+                if (nullish
+                    || temp.right.data > temp.data) {
+                    return false;
+                }
+                q.add(temp.right);
+            }
+            else {
+                nullish = true;
+            }
+        }
+        return true;
+    }
+
+    // Driver's code
+    public static void main(String[] args)
+    {
+        Node root = null;
+        root = newNode(10);
+        root.left = newNode(9);
+        root.right = newNode(8);
+        root.left.left = newNode(7);
+        root.left.right = newNode(6);
+        root.right.left = newNode(5);
+        root.right.right = newNode(4);
+        root.left.left.left = newNode(3);
+        root.left.left.right = newNode(2);
+        root.left.right.left = newNode(1);
+
+        // Function call
+        if (isHeap(root))
+            System.out.print(
+                "Given binary tree is a Heap\n");
+        else
+            System.out.print(
+                "Given binary tree is not a Heap\n");
+    }
+}
+
+================================================================
+
+Check if a binary tree is a min-heap or not
+Given a binary tree, check if it is a min-heap or not. 
+In order words, the binary tree must be a complete binary tree where each node has a higher value than its parent’s value.
+
+For example, the following binary tree is a min-heap:
+
+Min Heap
+
+On the other hand, the following binary tree is not a min-heap:
+
+BST
+
+Practice This Problem
+
+1. Recursive Solution
+The idea is to traverse the tree in a preorder fashion. 
+The value of each encountered node should be less than its left or right child.
+If that is not the case for every internal node, the binary tree is not a min-heap.
+
+To check for a complete binary tree, the left and right child’s index for any node is less than the total number of nodes for every node. 
+We can pass the index as a recursion parameter and check for every node that their left and right child’s index is within the correct range.
+
+ 
+The algorithm can be implemented in a way that both these properties can be checked in a single tree traversal. 
+
+
+// A class to store a binary tree node
+class Node
+{
+    int data;
+    Node left, right;
+ 
+    Node(int data) {
+        this.data = data;
+    }
+}
+ 
+class Main
+{
+    // Function to find the total number of nodes in the binary tree
+    private static int size(Node root)
+    {
+        if (root == null) {
+            return 0;
+        }
+        return 1 + size(root.left) + size(root.right);
+    }
+ 
+    // Function to check if a given binary tree is a complete binary tree
+    // and each node has a higher value than its parent
+    private static boolean isHeap(Node root, int i, int n)
+    {
+        // base case
+        if (root == null) {
+            return true;
+        }
+ 
+        // not complete binary tree: out of valid index range
+        if (i >= n) {
+            return false;
+        }
+ 
+        // current node has a higher value than its left or right child
+        if ((root.left != null && root.left.data <= root.data) ||
+                    (root.right != null && root.right.data <= root.data)) {
+            return false;
+        }
+ 
+        // check for left and right subtree
+        return isHeap(root.left, 2*i + 1, n) &&
+            isHeap(root.right, 2*i + 2, n);
+    }
+ 
+    // Function to check if a given binary tree is a min-heap or not
+    public static boolean isHeap(Node root)
+    {
+        int i = 0;
+        return isHeap(root, i, size(root));
+    }
+ 
+    public static void main(String[] args)
+    {
+        /* Construct the following tree
+                   2
+                 /   \
+                /     \
+               3       4
+              / \     / \
+             /   \   /   \
+            5     6 8    10
+        */
+ 
+        Node root = new Node(2);
+        root.left = new Node(3);
+        root.right = new Node(4);
+        root.left.left = new Node(5);
+        root.left.right = new Node(6);
+        root.right.left = new Node(8);
+        root.right.right = new Node(10);
+ 
+        if (isHeap(root)) {
+            System.out.print("The given binary tree is a min-heap");
+        }
+        else {
+            System.out.print("The given binary tree is not a min-heap");
+        }
+    }
+}
+
+
+Output:
+
+The given binary tree is a min-heap
+
+The time complexity of the above solution is O(n), where n is the total number of nodes in the binary tree. 
+The auxiliary space required by the program is O(h) for the call stack, where h is the height of the tree.
+
+===========
+
+2. Iterative Solution
+The idea is to perform a level order traversal for the given binary tree to check both structural and heap properties of a min-heap.
+
+To check for the structural property, simply check that no non-empty child is encountered for any node once an empty child is seen.
+To check for the heap property, check that both left and right children are greater than the parent node. 
+This can be easily done while inserting the children into the queue.
+
+
+import java.util.ArrayDeque;
+import java.util.Queue;
+ 
+// A class to store a binary tree node
+class Node
+{
+    int data;
+    Node left, right;
+ 
+    Node(int data)
+    {
+        this.data = data;
+        this.left = this.right = null;
+    }
+}
+ 
+class Main
+{
+    // Function to check if a given binary tree is a min-heap or not
+    public static boolean isHeap(Node root)
+    {
+        // base case
+        if (root == null) {
+            return true;
+        }
+ 
+        // create an empty queue and enqueue the root node
+        Queue<Node> queue = new ArrayDeque<>();
+        queue.add(root);
+ 
+        // take a boolean flag, which becomes true when an empty left or right
+        // child is seen for a node
+        boolean isNullSeen = false;
+ 
+        // loop till queue is empty
+        while (!queue.isEmpty())
+        {
+            // process front node in the queue
+            Node curr = queue.poll();
+ 
+            // left child is non-empty
+            if (curr.left != null)
+            {
+                // if either heap property is violated
+                if (isNullSeen || curr.left.data <= curr.data) {
+                    return false;
+                }
+ 
+                // enqueue left child
+                queue.add(curr.left);
+            }
+            // left child is empty
+            else {
+                isNullSeen = true;
+            }
+ 
+            // right child is non-empty
+            if (curr.right != null)
+            {
+                // if either heap property is violated
+                if (isNullSeen || curr.right.data <= curr.data) {
+                    return false;
+                }
+ 
+                // enqueue left child
+                queue.add(curr.right);
+            }
+            // right child is empty
+            else {
+                isNullSeen = true;
+            }
+        }
+ 
+        // we reach here only when the given binary tree is a min-heap
+        return true;
+    }
+ 
+    public static void main(String[] args)
+    {
+        /* Construct the following tree
+                   2
+                 /   \
+                /     \
+               3       4
+              / \     / \
+             /   \   /   \
+            5     6 8    10
+        */
+ 
+        Node root = new Node(2);
+        root.left = new Node(3);
+        root.right = new Node(4);
+        root.left.left = new Node(5);
+        root.left.right = new Node(6);
+        root.right.left = new Node(8);
+        root.right.right = new Node(10);
+ 
+        if (isHeap(root)) {
+            System.out.print("The given binary tree is a min-heap");
+        }
+        else {
+            System.out.print("The given binary tree is not a min-heap");
+        }
+    }
+}
+
+Output:
+
+The given binary tree is a min-heap
+
+The time complexity of the above solution is O(n), where n is the total number of nodes in the binary tree. 
+The auxiliary space required by the program is O(n) for level order traversal, where n is the total number of nodes in the binary tree.
+
+Output
+Given binary tree is a Heap
+Time Complexity: O(N) where N is the total number of nodes in a given binary tree.
+Auxiliary Space: O(N)
+
+==========================================================
+
