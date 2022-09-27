@@ -1,0 +1,266 @@
+Given two binary max heaps as arrays, merge the given heaps to form a new max heap.
+
+ 
+
+Example 1:
+
+Input  : 
+n = 4 m = 3
+a[] = {10, 5, 6, 2}, 
+b[] = {12, 7, 9}
+Output : 
+{12, 10, 9, 2, 5, 7, 6}
+Explanation :
+
+
+
+
+ 
+
+ 
+
+Your Task:  
+You don't need to read input or print anything. 
+Your task is to complete the function mergeHeaps() which takes the array a[], b[], its size n and m, as inputs and return the merged max heap. 
+Since there can be multiple solutions, therefore, to check for the correctness of your solution, your answer
+will be checked by the driver code and will return 1 if it is correct, else it returns 0.
+
+ 
+
+Expected Time Complexity: O(n.Logn)
+Expected Auxiliary Space: O(n + m)
+
+ 
+
+Constraints:
+1 <= n, m <= 105
+1 <= a[i], b[i] <= 2*105
+ 
+ 
+ MY_SOLUTION
+ 
+ class Solution{
+    public int[] mergeHeaps(int[] a, int[] b, int n, int m) {
+        // your code here
+        /*
+        PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Collections.reverseOrder());
+        
+        for(int i = 0; i < n; i++){
+            maxHeap.add(a[i]);
+        }
+        
+        
+        for(int i = 0; i < m; i++){
+            maxHeap.add(b[i]);
+        }
+        
+        int[] newHeap = new int[n + m];
+        
+        for(int i = 0; i < n + m; i++){
+            newHeap[i] = maxHeap.poll();
+        }
+        
+        return newHeap;
+        */
+        
+        int i = 0, j = 0, k = 0, res[] = new int[n+m];
+        while(i < n && j < m) {
+            if(a[i] >= b[j]) {
+                res[k] = a[i];
+                ++i;
+            }
+            else {
+                res[k] = b[j];
+                ++j;
+            }
+            ++k;
+        }
+        while(i < n) {
+            res[k] = a[i];
+            ++i;
+            ++k;
+        }
+        while(j < m) {
+            res[k] = b[j];
+            ++j;
+            ++k;
+        }
+        return res;
+        
+    }
+}
+ 
+ 
+===================================================================================
+ 
+Time Complexity :- Theta(n+m)
+Space Complexity :- Theta(n+m)
+Note :- Solution using Max-Heap PriorityQueue
+
+class Solution{
+    public int[] mergeHeaps(int[] a, int[] b, int n, int m) {
+        // your code here
+        PriorityQueue<Integer> pq = new PriorityQueue<>(n+m, Collections.reverseOrder());
+        int i = 0;
+        while(i < n && i < m) {
+            pq.offer(a[i]);
+            pq.offer(b[i]);
+            ++i;
+        }
+        while(i < n) {
+            pq.offer(a[i]);
+            ++i;
+        }
+        while(i < m) {
+            pq.offer(b[i]);
+            ++i;
+        }
+        int res[] = new int[n+m];
+        i = 0;
+        while(!pq.isEmpty()) {
+            res[i] = pq.poll();
+            ++i;
+        }
+        return res;
+    }
+}
+
+===================================================================================
+
+class Solution{
+    
+    public void maxHeapify(int[] arr, int n, int idx) {
+        if (idx >= n) return;
+        int l = 2 * idx + 1;
+        int r = 2 * idx + 2;
+        int max;
+        if (l < n && arr[l] > arr[idx])
+            max = l;
+        else
+            max = idx;
+        if (r < n && arr[r] > arr[max]) max = r;
+    
+        if (max != idx) {
+            int temp = arr[max];
+            arr[max] = arr[idx];
+            arr[idx] = temp;
+            maxHeapify(arr, n, max);
+        }
+    }
+    
+    public void buildMaxHeap(int[] arr, int n) {
+        for(int i = n/2-1; i >= 0; i--)
+            maxHeapify(arr, n, i);
+    }
+    
+    public int[] mergeHeaps(int[] a, int[] b, int n, int m) {
+        // your code here
+        int[] merged = new int[n+m];
+        for (int i = 0; i < n; i++) merged[i] = a[i];
+        for (int i = 0; i < m; i++) merged[n + i] = b[i];
+
+        buildMaxHeap(merged, n + m);
+        return merged;
+    }
+}
+
+===================================================================================
+Approach: To solve the problem follow the below idea:
+
+Create an array to store the result. 
+Copy both given arrays one by one into result.
+Once all the elements have been copied, then call standard build heap to construct full merged max heap. 
+
+Follow the given steps to solve the problem:
+
+Create an array merged of size N+M
+Copy elements of both the arrays in the array merged
+Build Max-Heap of this array
+Print elements of the Max-Heap
+Below is the implementation of the above approach:
+
+// Java program to merge two max heaps.
+ 
+class GfG {
+ 
+    // Standard heapify function to heapify a
+    // subtree rooted under idx. It assumes
+    // that subtrees of node are already heapified.
+    public static void maxHeapify(int[] arr, int N, int i)
+    {
+        // Find largest of node and its children
+        if (i >= N) {
+            return;
+        }
+        int l = i * 2 + 1;
+        int r = i * 2 + 2;
+        int max;
+        if (l < N && arr[l] > arr[i]) {
+            max = l;
+        }
+        else
+            max = i;
+        if (r < N && arr[r] > arr[max]) {
+            max = r;
+        }
+ 
+        // Put maximum value at root and
+        // recur for the child with the
+        // maximum value
+        if (max != i) {
+            int temp = arr[max];
+            arr[max] = arr[i];
+            arr[i] = temp;
+            maxHeapify(arr, N, max);
+        }
+    }
+ 
+    // Merges max heaps a[] and b[] into merged[]
+    public static void mergeHeaps(int[] arr, int[] a,
+                                  int[] b, int N, int M)
+    {
+        for (int i = 0; i < N; i++) {
+            arr[i] = a[i];
+        }
+        for (int i = 0; i < M; i++) {
+            arr[N + i] = b[i];
+        }
+        N = N + M;
+ 
+        // Builds a max heap of given arr[0..n-1]
+        for (int i = N / 2 - 1; i >= 0; i--) {
+            maxHeapify(arr, N, i);
+        }
+    }
+ 
+    // Driver's Code
+    public static void main(String[] args)
+    {
+        int[] a = { 10, 5, 6, 2 };
+        int[] b = { 12, 7, 9 };
+        int N = a.length;
+        int M = b.length;
+ 
+        int[] merged = new int[M + N];
+ 
+        // Function call
+        mergeHeaps(merged, a, b, N, M);
+ 
+        for (int i = 0; i < M + N; i++)
+            System.out.print(merged[i] + " ");
+        System.out.println();
+    }
+}
+Output
+12 10 9 2 5 7 6 
+Time Complexity: O(N + M)
+Auxiliary Space: O(N + M)  
+
+
+
+
+
+
+
+===================================================================================
+
