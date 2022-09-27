@@ -1,0 +1,860 @@
+Given an array arr[] and an integer K where K is smaller than size of array, the task is to find the Kth smallest element in the given array.
+It is given that all array elements are distinct.
+
+Example 1:
+
+Input:
+N = 6
+arr[] = 7 10 4 3 20 15
+K = 3
+Output : 7
+Explanation :
+3rd smallest element in the given 
+array is 7.
+Example 2:
+
+Input:
+N = 5
+arr[] = 7 10 4 20 15
+K = 4
+Output : 15
+Explanation :
+4th smallest element in the given 
+array is 15.
+Your Task:
+You don't have to read input or print anything. 
+Your task is to complete the function kthSmallest() which takes the array arr[], integers l and r denoting the starting and ending index of the array 
+and an integer K as input and returns the Kth smallest element.
+ 
+ 
+Expected Time Complexity: O(n)
+Expected Auxiliary Space: O(log(n))
+Constraints:
+1 <= N <= 105
+1 <= arr[i] <= 105
+1 <= K <= N
+
+MY_SOLUTION
+
+class Solution{
+    public static int kthSmallest(int[] arr, int l, int r, int K) 
+    { 
+        //Your code here
+        /*
+        //BRUTE FORCE
+        PriorityQueue<Integer> maxHeap = new PriorityQueue<Integer>(Collections.reverseOrder());
+        
+        for(int i = 0; i < arr.length; i++){
+            maxHeap.add(arr[i]);
+            
+            if(maxHeap.size() > k){
+                maxHeap.remove();
+            }
+        }
+        return maxHeap.peek();
+        */
+        
+        // OPTIMISED USING QUICK SELECT
+        // If k is smaller than number of elements
+        // in array
+        if (K > 0 && K <= r - l + 1) {
+ 
+            // Partition the array around last
+            // element and get position of pivot
+            // element in sorted array
+            int pos = partition(arr, l, r);
+ 
+            // If position is same as k
+            if (pos - l == K - 1)
+                return arr[pos];
+ 
+            // If position is more, recur for
+            // left subarray
+            if (pos - l > K - 1)
+                return kthSmallest(arr, l, pos - 1, K);
+ 
+            // Else recur for right subarray
+            return kthSmallest(arr, pos + 1, r,
+                               K - pos + l - 1);
+        }
+ 
+        // If k is more than number of elements
+        // in array
+        return Integer.MAX_VALUE;
+        
+    }
+    
+    public static int partition(int[] arr, int l, int r)
+    {
+        int x = arr[r], i = l;
+        for (int j = l; j <= r - 1; j++) {
+            if (arr[j] <= x) {
+ 
+                // Swapping arr[i] and arr[j]
+                int temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+ 
+                i++;
+            }
+        }
+ 
+        // Swapping arr[i] and arr[r]
+        int temp = arr[i];
+        arr[i] = arr[r];
+        arr[r] = temp;
+ 
+        return i;
+    }
+}
+
+
+================================================
+
+//maintain a max heap priority queue. push all elements first.
+and then set a condition such that u reach
+//kth smallest while popping
+class Solution{
+    public:
+    // arr : given array
+    // l : starting index of the array i.e 0
+    // r : ending index of the array i.e size-1
+    // k : find kth smallest element and return using this function
+    int kthSmallest(int arr[], int l, int r, int k) {
+        priority_queue<int> pq;
+        for(int i=0;i<=r;i++){
+            pq.push(arr[i]);
+        }
+        int j=0;
+        while(j!=r-k+1){ //finds kth smallest,pq its in descending order
+            pq.pop();
+            j++;
+        }
+        return pq.top();
+    }
+};
+
+======================================================
+
+class Solution{
+    public static int kthSmallest(int[] arr, int l, int r, int k) 
+    { 
+        Arrays.sort(arr);
+        return arr[k - 1];
+    } 
+}
+
+========================================================
+
+K’th smallest element in an unsorted array using sorting:
+
+-> Sort the given array and return the element at index K-1 in the sorted array. 
+
+Follow the given steps to solve the problem:
+
+-> Sort the input array in the increasing order
+-> Return the element at the K-1 index (0 – Based indexing) in the sorted array
+
+Below is the Implementation of the above approach:
+
+ 
+// Java code for Kth smallest element
+// in an array
+import java.util.Arrays;
+import java.util.Collections;
+ 
+class GFG {
+    // Function to return K'th smallest
+    // element in a given array
+    public static int kthSmallest(Integer[] arr, int K)
+    {
+        // Sort the given array
+        Arrays.sort(arr);
+ 
+        // Return K'th element in
+        // the sorted array
+        return arr[K - 1];
+    }
+ 
+    // driver's code
+    public static void main(String[] args)
+    {
+        Integer arr[] = new Integer[] { 12, 3, 5, 7, 19 };
+        int K = 2;
+ 
+        // Function call
+        System.out.print("K'th smallest element is "
+                         + kthSmallest(arr, K));
+    }
+}
+ 
+Output
+K'th smallest element is 5
+Time Complexity: O(N log N)
+Auxiliary Space: O(1) 
+
+============================
+
+K’th smallest element in an unsorted array using set data structure:
+-> Set data structure can be used to find the kth smallest element as it stores the distinct elements in sorted order.
+-> Set can be used because it is mentioned in the question that all the elements in the array are distinct.
+
+Follow the given steps to solve the problem:
+
+-> Insert all array elements into the set
+-> Advance the iterator to the Kth element in the set
+-> Return the value of the element at which the iterator is pointing
+
+Below is the Implementation of the above approach:
+
+// Java code for the above approach
+ 
+import java.util.*;
+ 
+class GFG {
+ 
+    public static void main(String[] args)
+    {
+        int[] arr = { 12, 3, 5, 7, 19 };
+        int N = arr.length;
+        int K = 4;
+ 
+        // since counting starts from 0 so to find kth
+        // element we need to reduce K by 1
+        K--;
+ 
+        // for storing elements in sorted form
+        // in set we will use TreeSet
+        Set<Integer> s = new TreeSet<Integer>();
+ 
+        // Adding elements to set
+        for (int i = 0; i < N; i++)
+            s.add(arr[i]);
+ 
+        // Use iterator method of Iterator
+        // for the traversal
+        Iterator<Integer> itr = s.iterator();
+ 
+        while (K > 0) {
+            itr.next();
+            K--;
+        } // itr points to the Kth element in the set
+ 
+        System.out.println(itr.next());
+    }
+}
+ 
+Time Complexity:  O(N*log N)
+Auxiliary Space: O(N)
+
+=======================================================================
+
+K’th smallest element in an unsorted array using heap data structure:
+
+K’th smallest element in an unsorted array using Min-Heap
+
+Min-Heap can be used to find the kth smallest element, by inserting all the elements into Min-Heap and
+then and call extractMin() function K times. 
+
+Follow the given steps to solve the problem:
+
+-> -> Insert all the array elements into the Min-Heap
+-> Call extractMin() function K times
+-> Return the value obtained at the last call of extractMin() function 
+
+Below is the Implementation of the above approach:
+
+// Java program to find K'th smallest element using min heap
+import java.util.*;
+class GFG {
+ 
+    // A class for Max Heap
+    class MinHeap {
+        int[] harr; // pointer to array of elements in heap
+        int capacity; // maximum possible size of min heap
+        int heap_size; // Current number of elements in min
+                       // heap
+ 
+        int parent(int i) { return (i - 1) / 2; }
+        int left(int i) { return ((2 * i) + 1); }
+        int right(int i) { return ((2 * i) + 2); }
+        int getMin() { return harr[0]; } // Returns minimum
+ 
+        // to replace root with new node x and heapify() new
+        // root
+        void replaceMax(int x)
+        {
+            this.harr[0] = x;
+            minHeapify(0);
+        }
+        MinHeap(int a[], int size)
+        {
+            heap_size = size;
+            harr = a; // store address of array
+            int i = (heap_size - 1) / 2;
+            while (i >= 0) {
+                minHeapify(i);
+                i--;
+            }
+        }
+ 
+        // Method to remove maximum element (or root) from
+        // min heap
+        int extractMin()
+        {
+            if (heap_size == 0)
+                return Integer.MAX_VALUE;
+ 
+            // Store the maximum value.
+            int root = harr[0];
+ 
+            // If there are more than 1 items, move the last
+            // item to root and call heapify.
+            if (heap_size > 1) {
+                harr[0] = harr[heap_size - 1];
+                minHeapify(0);
+            }
+            heap_size--;
+            return root;
+        }
+ 
+        // A recursive method to heapify a subtree with root
+        // at given index This method assumes that the
+        // subtrees are already heapified
+        void minHeapify(int i)
+        {
+            int l = left(i);
+            int r = right(i);
+            int smallest = i;
+            if (l < heap_size && harr[l] < harr[i])
+                smallest = l;
+            if (r < heap_size && harr[r] < harr[smallest])
+                smallest = r;
+            if (smallest != i) {
+                int t = harr[i];
+                harr[i] = harr[smallest];
+                harr[smallest] = t;
+                minHeapify(smallest);
+            }
+        }
+    };
+ 
+    // Function to return k'th largest element in a given
+    // array
+    int kthSmallest(int arr[], int N, int K)
+    {
+ 
+        // Build a heap of first k elements: O(k) time
+        MinHeap mh = new MinHeap(arr, N);
+ 
+        // Process remaining n-k elements. If current
+        // element is smaller than root, replace root with
+        // current element
+        for (int i = 0; i < K - 1; i++)
+            mh.extractMin();
+ 
+        // Return root
+        return mh.getMin();
+    }
+ 
+    // Driver's code
+    public static void main(String[] args)
+    {
+        int arr[] = { 12, 3, 5, 7, 19 };
+        int N = arr.length, K = 2;
+        GFG gfg = new GFG();
+ 
+        // Function call
+        System.out.print("K'th smallest element is "
+                         + gfg.kthSmallest(arr, N, K));
+    }
+}
+ 
+Output
+K'th smallest element is 5
+Time complexity: O(N + K Log N).
+Auxiliary Space: O(N)
+
+===============================================================
+
+K’th smallest element in an unsorted array using Max-Heap
+-> Max-Heap can be used to find the kth smallest element, by inserting first K elements into Max-Heap and then compare remaining 
+elements with the root of the Max-Heap and if the element is less than the root then remove the root and insert this 
+element into the heap and finally return root of the Max-Heap 
+
+Follow the given steps to solve the problem:
+
+-> Build a Max-Heap MH of the first K elements (arr[0] to arr[K-1]) of the given array. 
+-> For each element, after the Kth element (arr[K] to arr[n-1]), compare it with the root of MH. 
+-> If the element is less than the root then make it the root and call heapify for Max-Heap MH
+-> b) Else ignore it. 
+-> Finally, the root of the MH is the Kth smallest element.
+
+Below is the Implementation of the above approach:
+
+// A Java program to find k'th smallest element using max
+// heap
+import java.util.*;
+class GFG {
+ 
+    // A class for Max Heap
+    class MaxHeap {
+        int[] harr; // pointer to array of elements in heap
+        int capacity; // maximum possible size of max heap
+        int heap_size; // Current number of elements in max
+                       // heap
+ 
+        int parent(int i) { return (i - 1) / 2; }
+        int left(int i) { return (2 * i + 1); }
+        int right(int i) { return (2 * i + 2); }
+        int getMax() { return harr[0]; } // Returns maximum
+ 
+        // to replace root with new node x and heapify() new
+        // root
+        void replaceMax(int x)
+        {
+            this.harr[0] = x;
+            maxHeapify(0);
+        }
+        MaxHeap(int a[], int size)
+        {
+            heap_size = size;
+            harr = a; // store address of array
+            int i = (heap_size - 1) / 2;
+            while (i >= 0) {
+                maxHeapify(i);
+                i--;
+            }
+        }
+ 
+        // Method to remove maximum element (or root) from
+        // max heap
+        int extractMax()
+        {
+            if (heap_size == 0)
+                return Integer.MAX_VALUE;
+ 
+            // Store the maximum value.
+            int root = harr[0];
+ 
+            // If there are more than 1 items, move the last
+            // item to root and call heapify.
+            if (heap_size > 1) {
+                harr[0] = harr[heap_size - 1];
+                maxHeapify(0);
+            }
+            heap_size--;
+            return root;
+        }
+ 
+        // A recursive method to heapify a subtree with root
+        // at given index This method assumes that the
+        // subtrees are already heapified
+        void maxHeapify(int i)
+        {
+            int l = left(i);
+            int r = right(i);
+            int largest = i;
+            if (l < heap_size && harr[l] > harr[i])
+                largest = l;
+            if (r < heap_size && harr[r] > harr[largest])
+                largest = r;
+            if (largest != i) {
+                int t = harr[i];
+                harr[i] = harr[largest];
+                harr[largest] = t;
+                maxHeapify(largest);
+            }
+        }
+    };
+ 
+    // Function to return k'th largest element in a given
+    // array
+    int kthSmallest(int arr[], int N, int K)
+    {
+ 
+        // Build a heap of first k elements: O(k) time
+        MaxHeap mh = new MaxHeap(arr, K);
+ 
+        // Process remaining n-k elements.  If current
+        // element is smaller than root, replace root with
+        // current element
+        for (int i = K; i < N; i++)
+            if (arr[i] < mh.getMax())
+                mh.replaceMax(arr[i]);
+ 
+        // Return root
+        return mh.getMax();
+    }
+ 
+    // Driver's code
+    public static void main(String[] args)
+    {
+        int arr[] = { 12, 3, 5, 7, 19 };
+        int N = arr.length, K = 4;
+        GFG gfg = new GFG();
+ 
+        // Function call
+        System.out.print("K'th smallest element is "
+                         + gfg.kthSmallest(arr, N, K));
+    }
+}
+
+Time Complexity: O(K + (N-K) * Log K) 
+Auxiliary Space: O(K)
+
+
+==================================================
+
+K’th smallest element in an unsorted array using QuickSelect:
+
+This is an optimization over method 1, if QuickSort is used as a sorting algorithm in first step. 
+In QuickSort, pick a pivot element, then move the pivot element to its correct position and partition the surrounding array.
+The idea is, not to do complete quicksort, but stop at the point where pivot itself is k’th smallest element.
+Also, not to recur for both left and right sides of pivot, but recur for one of them according to the position of pivot. 
+
+Follow the given steps to solve the problem:
+
+-> Run quick sort algorithm on the input array
+-> In this algorithm pick a pivot element and move it to it’s correct position
+-> Now, if index of pivot is equal to K then return the value, else if the index of pivot is greater than K, 
+   then recur for the left subarray, else recur for the right subarray 
+-> Repeat this process until the element at index K is not found
+
+Below is the Implementation of the above approach:
+
+// Java code for kth smallest element in an array
+ 
+import java.util.Arrays;
+import java.util.Collections;
+ 
+class GFG {
+    // Standard partition process of QuickSort.
+    // It considers the last element as pivot
+    // and moves all smaller element to left of
+    // it and greater elements to right
+    public static int partition(Integer[] arr, int l, int r)
+    {
+        int x = arr[r], i = l;
+        for (int j = l; j <= r - 1; j++) {
+            if (arr[j] <= x) {
+ 
+                // Swapping arr[i] and arr[j]
+                int temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+ 
+                i++;
+            }
+        }
+ 
+        // Swapping arr[i] and arr[r]
+        int temp = arr[i];
+        arr[i] = arr[r];
+        arr[r] = temp;
+ 
+        return i;
+    }
+ 
+    // This function returns k'th smallest element
+    // in arr[l..r] using QuickSort based method.
+    // ASSUMPTION: ALL ELEMENTS IN ARR[] ARE DISTINCT
+    public static int kthSmallest(Integer[] arr, int l,
+                                  int r, int K)
+    {
+        // If k is smaller than number of elements
+        // in array
+        if (K > 0 && K <= r - l + 1) {
+ 
+            // Partition the array around last
+            // element and get position of pivot
+            // element in sorted array
+            int pos = partition(arr, l, r);
+ 
+            // If position is same as k
+            if (pos - l == K - 1)
+                return arr[pos];
+ 
+            // If position is more, recur for
+            // left subarray
+            if (pos - l > K - 1)
+                return kthSmallest(arr, l, pos - 1, K);
+ 
+            // Else recur for right subarray
+            return kthSmallest(arr, pos + 1, r,
+                               K - pos + l - 1);
+        }
+ 
+        // If k is more than number of elements
+        // in array
+        return Integer.MAX_VALUE;
+    }
+ 
+    // Driver's code
+    public static void main(String[] args)
+    {
+        Integer arr[]
+            = new Integer[] { 12, 3, 5, 7, 4, 19, 26 };
+        int K = 3;
+ 
+        // Function call
+        System.out.print(
+            "K'th smallest element is "
+            + kthSmallest(arr, 0, arr.length - 1, K));
+    }
+}
+
+Output
+K'th smallest element is 5
+Time Complexity: O(N2) in worst case and O(N) on average 
+Auxiliary Space: O(1)
+
+================================================================
+
+K’th smallest element in an unsorted array using Map:
+-> This approach is very much similar to the QuickSelect and counting sort algorithm but much easier to implement. 
+-> Use a map and then map each element with its frequency. 
+-> And as an ordered map would store the data in a sorted manner, so keep on adding the frequency of each element till it does
+   not become greater than or equal to k so that the k’th element from the start can be reached i.e. the k’th smallest element.
+
+Example: A[] = {7, 0, 25, 6, 16, 17, 0}, K = 3
+
+K’th Smallest/Largest Element in Unsorted Array
+
+Follow the given steps to solve the problem:
+
+-> Store frequency of every element in a Map mp
+-> Now traverse over sorted elements in the Map mp and add their frequencies in a variable freq
+-> If at any point the value of freq is greater than or equal to K, then return the value of iterator of Map mp
+
+Below is the Implementation of the above approach:
+
+// Java program for the above approach
+ 
+import java.util.*;
+ 
+class GFG {
+    static int Kth_smallest(TreeMap<Integer, Integer> mp,
+                            int K)
+    {
+        int freq = 0;
+        for (Map.Entry it : mp.entrySet()) {
+ 
+            // adding the frequencies of each element
+            freq += (int)it.getValue();
+ 
+            // if at any point frequency becomes
+            // greater than or equal to k then
+            // return that element
+            if (freq >= K) {
+                return (int)it.getKey();
+            }
+        }
+ 
+        return -1; // returning -1 if k>size of the array
+                   // which is an impossible scenario
+    }
+ 
+    // Driver's code
+    public static void main(String[] args)
+    {
+        int N = 5;
+        int K = 2;
+        int[] arr = { 12, 3, 5, 7, 19 };
+        TreeMap<Integer, Integer> mp = new TreeMap<>();
+ 
+        for (int i = 0; i < N; i++) {
+ 
+            // mapping every element with
+            // it's
+            // frequency
+            mp.put(arr[i], mp.getOrDefault(arr[i], 0) + 1);
+        }
+ 
+        // Function call
+        int ans = Kth_smallest(mp, K);
+ 
+        System.out.println(
+            "The " + K + "th smallest element is " + ans);
+    }
+}
+ 
+Time Complexity: O(N log N)
+Auxiliary Space: O(N)
+
+======================================================================
+
+K’th smallest element in an unsorted array using Priority Queue:
+-> To find the Kth minimum element in an array, insert the elements into the priority queue until the size of it is less than K, 
+   and then compare remaining elements with the root of the priority queue and if the element is less than the root then remove 
+   the root and insert this element into the priority queue and finally return root of the priority queue
+
+Follow the given steps to solve the problem:
+
+-> Build a priority queue of the first K elements (arr[0] to arr[K-1]) of the given array. 
+-> For each element, after the Kth element (arr[K] to arr[n-1]), compare it with the root of priority queue. 
+If the element is less than the root then remove the root and insert this element into the priority queue
+b) Else ignore it. 
+Finally, the root of the priority queue is the Kth smallest element.
+Below is the Implementation of the above approach:
+
+// Java code to implement the approach
+ 
+import java.util.*;
+ 
+// Custom comparator class to form the Max heap
+class MinHeapComparator implements Comparator<Integer> {
+ 
+    @Override
+    public int compare(Integer number1, Integer number2)
+    {
+        int value = number1.compareTo(number2);
+ 
+        // Elements are sorted in reverse order
+        if (value > 0) {
+            return -1;
+        }
+        else if (value < 0) {
+            return 1;
+        }
+        else {
+            return 0;
+        }
+    }
+}
+class GFG {
+ 
+    // Function to find kth smallest array element
+    static int kthSmallest(int[] v, int N, int K)
+    {
+        // For finding min element we need (Max
+        // heap)priority queue
+        PriorityQueue<Integer> heap1
+            = new PriorityQueue<Integer>(
+                new MinHeapComparator());
+ 
+        for (int i = 0; i < N; ++i) {
+ 
+            // Insert elements into
+            // the priority queue
+            heap1.add(v[i]);
+ 
+            // If current element is less than top, that
+            // means there are other k-1 lesser elements are
+            // present at bottom
+            // thus pop that element and add kth largest
+            // element into the heap till curr at last all
+            // the greater element than kth element will get
+            // pop off and at the top of heap there will be
+            // kth smallest element
+            if (heap1.size() > K) {
+                heap1.remove();
+            }
+        }
+ 
+        // Return the top of the heap as kth smallest
+        // element
+        return heap1.peek();
+    }
+ 
+    // Driver's code
+    public static void main(String[] args)
+    {
+        // Given array
+        int[] vec
+            = { 10, 5, 4, 3, 48, 15, 6, 2, 33, 53, 10 };
+ 
+        // Size of array
+        int N = vec.length;
+ 
+        // Given K
+        int K = 4;
+ 
+        // Function Call
+        System.out.println("Kth Smallest Element: "
+                           + kthSmallest(vec, N, K));
+    }
+}
+Time complexity: O(K log K +  (N – K) log K)
+Auxiliary Space: O(K)
+
+=============================================================
+
+K’th smallest element in an unsorted array using Binary Search:
+
+The idea to solve this problem is that the Kth smallest element would be the element at the kth position if the array was sorted inincreasing order.
+Using this logic, binary search can be used to predict the index of an element as if the array was sorted but without actually sorting the array. 
+ 
+
+Follow the given steps to solve the problem:
+
+Find low and high that is the range where our answer can lie. 
+Apply Binary Search on this range. 
+If the selected element which would be mid has less than K elements lesser to it then increase the number that is low = mid + 1.
+Otherwise, Decrement the high pointer, i.e high = mid
+The Binary Search will end when only one element remains in the answer space which would be the answer.
+
+Below is the implementation of the above approach:
+
+// Java code for kth smallest element in an array
+ 
+import java.util.Arrays;
+import java.util.Collections;
+ 
+class GFG {
+    static int count(int[] nums, int mid)
+    {
+        // function to calculate number of elements less
+        // than equal to mid
+        int cnt = 0;
+ 
+        for (int i = 0; i < nums.length; i++)
+            if (nums[i] <= mid)
+                cnt++;
+ 
+        return cnt;
+    }
+ 
+    static int kthSmallest(int[] nums, int k)
+    {
+        int low = Integer.MAX_VALUE;
+        int high = Integer.MIN_VALUE;
+        // calculate minimum and maximum the array.
+        for (int i = 0; i < nums.length; i++) {
+            low = Math.min(low, nums[i]);
+            high = Math.max(high, nums[i]);
+        }
+        // Our answer range lies between minimum and maximum
+        // element of the array on which Binary Search is
+        // Applied
+        while (low < high) {
+            int mid = low + (high - low) / 2;
+            /*if the count of number of elements in the
+              array less than equal to mid is less than k
+              then increase the number. Otherwise decrement
+              the number and try to find a better answer.
+            */
+            if (count(nums, mid) < k)
+                low = mid + 1;
+ 
+            else
+                high = mid;
+        }
+ 
+        return low;
+    }
+ 
+    // Driver's code
+    public static void main(String[] args)
+    {
+        int arr[] = { 1, 4, 5, 3, 19, 3 };
+        int k = 3;
+ 
+        // Function call
+        System.out.print("Kth smallest element is "
+                         + kthSmallest(arr, k));
+    }
+}
+ 
+Time complexity: O((mx-mn) * log (mx-mn)), where mn be minimum and mx be maximum.
+Auxiliary Space: O(1)
