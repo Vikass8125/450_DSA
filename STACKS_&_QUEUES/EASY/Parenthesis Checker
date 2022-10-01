@@ -1,0 +1,379 @@
+Given an expression string x. Examine whether the pairs and the orders of “{“,”}”,”(“,”)”,”[“,”]” are correct in exp.
+For example, the function should return 'true' for exp = “[()]{}{[()()]()}” and 'false' for exp = “[(])”.
+
+Example 1:
+
+Input:
+{([])}
+Output: 
+true
+Explanation: 
+{ ( [ ] ) }. Same colored brackets can form 
+balaced pairs, with 0 number of 
+unbalanced bracket.
+Example 2:
+
+Input: 
+()
+Output: 
+true
+Explanation: 
+(). Same bracket can form balanced pairs, 
+and here only 1 type of bracket is 
+present and in balanced way.
+Example 3:
+
+Input: 
+([]
+Output: 
+false
+Explanation: 
+([]. Here square bracket is balanced but 
+the small bracket is not balanced and 
+Hence , the output will be unbalanced.
+Your Task:
+This is a function problem. You only need to complete the function ispar() that takes a string as a parameter and returns a boolean value true 
+if brackets are balanced else returns false. The printing is done automatically by the driver code.
+
+Expected Time Complexity: O(|x|)
+Expected Auixilliary Space: O(|x|)
+
+Constraints:
+1 ≤ |x| ≤ 32000
+
+Note: The drive code prints "balanced" if function return true, otherwise it prints "not balanced".
+
+MY_SOLUTION
+
+class Solution
+{
+    //Function to check if brackets are balanced or not.
+    static boolean ispar(String x)
+    {
+        // add your code here
+        Stack<Character> st = new Stack<>();
+        
+        int len = x.length();
+        
+        for(int i = 0; i < len; i++){
+            char ch = x.charAt(i);
+            if(ch == '[' || ch == '{' || ch == '('){
+                st.push(ch);
+            }
+            else if(!st.isEmpty() && st.peek() == '['  && ch == ']') {
+                st.pop();
+            }
+            else if(!st.isEmpty() && st.peek() == '(' && ch == ')'){
+                st.pop();
+            }
+            else if(!st.isEmpty() && st.peek() == '{' && ch == '}'){
+                st.pop();
+            }
+            else return false;
+        }
+        
+        return st.isEmpty();
+    }
+}
+
+
+================================================================================================
+
+class Solution
+{
+    //Function to check if opening and closing brackets are of same type.
+    static boolean cmp(char b, char c)
+    {
+        if(b=='{' && c=='}')
+            return true;
+        else if(b=='[' && c==']')
+            return true;
+        else if(b=='(' && c==')')
+            return true;
+        return false;
+    }
+    
+    //Function to check if brackets are balanced or not.
+    static boolean ispar(String x)
+    {
+        Stack<Character> s = new Stack<>();
+        
+        //iterating over the string.
+        for(int i=0;i<x.length();i++)
+        {
+            //if opening bracket is encountered, we push it into stack.
+            if(x.charAt(i)=='[' || x.charAt(i)=='{' || x.charAt(i)=='(') 
+                s.push(x.charAt(i));
+                
+            //if closing bracket is encountered, we compare it with top of stack.
+            else if(x.charAt(i)==']' || x.charAt(i)=='}' || x.charAt(i)==')') 
+            {
+                //if top of stack has opening bracket of different
+                //type, we return false.
+                if(s.isEmpty() == true || !cmp(s.peek(),x.charAt(i))) 
+                    return false;
+                    
+                //else we pop the top element from stack.
+                else
+                    s.pop();
+            }
+        }
+        
+        //if stack becomes empty, we return true else false.
+        if(s.isEmpty() == true)
+            return true;
+        else
+            return false;
+    }
+}
+
+================================================================================================
+
+class Solution
+
+{
+
+    //Function to check if brackets are balanced or not.
+
+    static boolean ispar(String str)
+
+    {
+
+        // add your code here
+
+        Deque<Character> stack= new ArrayDeque<Character>();
+
+        for(int i=0;i<str.length();i++){
+
+            char x= str.charAt(i);
+
+            if(x=='(' || x=='{' || x=='[')
+
+            {
+
+                stack.push(x);
+
+                continue;
+
+            }
+
+            
+
+            if(stack.isEmpty())
+
+            {
+
+                return false;
+
+            }
+
+            
+
+            char check;
+
+            switch(x){
+
+                case')':
+
+                    check=stack.pop();
+
+                    if(check=='{' || check=='[')
+
+                    return false;
+
+                    break;
+
+                    
+
+                    
+
+                    case'}':
+
+                    check=stack.pop();
+
+                    if(check=='(' || check=='[')
+
+                    return false;
+
+                    break;
+
+                    
+
+                    
+
+                    case']':
+
+                    check=stack.pop();
+
+                    if(check=='(' || check=='{')
+
+                    return false;
+
+                    break;
+
+                    
+
+            }
+
+        }
+
+        
+
+        return stack.isEmpty();
+
+    }
+
+}
+
+================================================================================================
+
+public static class Pair
+   {
+       char ch1;
+       char ch2;
+      Pair(char ch1,char ch2)
+      {
+          this.ch1=ch1;
+          this.ch2=ch2;
+      }
+   }
+   static boolean ispar(String x)
+   {
+       // add your code here
+       if(x.length()==1)
+       {
+           return false;
+       }
+       
+       Stack<Pair> st=new Stack<>();
+       int count=0;
+       for(int i=0; i<x.length(); i++)
+       {
+           if(x.charAt(i)=='{')
+           {
+               st.push(new Pair('{','}'));
+               count++;
+           }
+           else if(x.charAt(i)=='(')
+           {
+               st.push(new Pair('(',')'));
+               count++;
+           }
+           else if(x.charAt(i)=='[')
+           {
+               st.push(new Pair('[',']'));
+               count++;
+           }
+           if(x.charAt(i)=='}' || x.charAt(i)==']' || x.charAt(i)==')')
+           {
+               if(!st.isEmpty() &&st.peek().ch2==x.charAt(i))
+               {
+                   st.pop();
+               }
+               count--;
+           }
+           
+       }
+       if(st.isEmpty() && count==0)
+       {
+           return true;
+       }
+       else
+       {
+           return false;
+       }
+       
+       
+   }
+
+
+================================================================================================
+
+Check for Balanced Bracket expression using Stack:
+
+The idea is to put all the opening brackets in the stack.
+Whenever you hit a closing bracket, search if the top of the stack is the opening bracket of the same nature.
+If this holds then pop the stack and continue the iteration, in the end if the stack is empty, it means all brackets are well-formed . 
+Otherwise, they are not balanced.
+
+Follow the steps mentioned below to implement the idea:
+
+Declare a character stack (say temp).
+Now traverse the string exp. 
+If the current character is a starting bracket ( ‘(‘ or ‘{‘  or ‘[‘ ) then push it to stack.
+If the current character is a closing bracket ( ‘)’ or ‘}’ or ‘]’ ) then pop from stack and if the popped character is the matching starting bracket then fine.
+Else brackets are Not Balanced.
+After complete traversal, if there is some starting bracket left in stack then Not balanced, else Balanced.
+Below is the implementation of the above approach:
+
+
+// Java program for checking
+// balanced brackets
+import java.util.*;
+ 
+public class BalancedBrackets {
+ 
+    // function to check if brackets are balanced
+    static boolean areBracketsBalanced(String expr)
+    {
+        // Using ArrayDeque is faster than using Stack class
+        Deque<Character> stack
+            = new ArrayDeque<Character>();
+ 
+        // Traversing the Expression
+        for (int i = 0; i < expr.length(); i++) {
+            char x = expr.charAt(i);
+ 
+            if (x == '(' || x == '[' || x == '{') {
+                // Push the element in the stack
+                stack.push(x);
+                continue;
+            }
+ 
+            // If current character is not opening
+            // bracket, then it must be closing. So stack
+            // cannot be empty at this point.
+            if (stack.isEmpty())
+                return false;
+            char check;
+            switch (x) {
+            case ')':
+                check = stack.pop();
+                if (check == '{' || check == '[')
+                    return false;
+                break;
+ 
+            case '}':
+                check = stack.pop();
+                if (check == '(' || check == '[')
+                    return false;
+                break;
+ 
+            case ']':
+                check = stack.pop();
+                if (check == '(' || check == '{')
+                    return false;
+                break;
+            }
+        }
+ 
+        // Check Empty Stack
+        return (stack.isEmpty());
+    }
+ 
+    // Driver code
+    public static void main(String[] args)
+    {
+        String expr = "([{}])";
+ 
+        // Function call
+        if (areBracketsBalanced(expr))
+            System.out.println("Balanced ");
+        else
+            System.out.println("Not Balanced ");
+    }
+}
+Output
+Balanced
+Time Complexity: O(N), Iteration over the string of size N one time.
+Auxiliary Space: O(N) for stack. 
