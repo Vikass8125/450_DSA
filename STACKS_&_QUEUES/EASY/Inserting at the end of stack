@@ -1,0 +1,132 @@
+Your are given a stack/deque of integers 'MY-STACK' and an integer 'X'. Your task is to insert 'X' to the bottom of 'MY-STACK' and the last element represents the element at the top of the stack.
+
+Sample Input 1 :
+2
+3 8
+4 3 2
+4 5
+6 2 4 9
+Sample Output 1 :
+8 4 3 2
+5 6 2 4 9
+Explanation For Sample Input 1 :
+Test Case 1:
+
+We are  given 'MY_STACK = [4,3,2] and 'X’ = 8.
+We insert ‘X’ at the bottom of ‘MY_STACK’. 
+So finally, we have 'MY_STACK' = [8, 4, 3, 2]. 
+
+Test Case 2:
+After inserting an element at its bottom, the stack will be 5 6 2 4 9
+Sample Input 2 :
+2
+1 0
+4 
+2 5
+1 9
+Sample Output 2 :
+0 4
+5 1 9
+Explanation For Sample Input 2 :
+Test Case 1:
+We are given 'MY_STACK = [4]’ and 'X’ = 0’.
+We insert ‘X’ at the bottom of ‘MY_STACK’. 
+So finally, 'MY_STACK' will become [0, 4]. 
+
+Test Case 2:
+We are given 'MY_STACK = [1,9]’ and 'X’ = 5.
+So finally, 'MY_STACK' will become [5, 1, 9]. 
+
+
+MY_SOLUTION
+
+Recursion
+The idea is to use the recursion stack to achieve this task. So the base case will be when 'MY_STACK' is empty, that is when we will push the desired element.
+We will keep on extracting the top element of ‘MY_STACK’ recursively, delete it, make recursive calls and push the extracted element back into 'MY_STACK'.
+
+
+Algorithm
+
+ 
+
+-> Let’s say we have given a function ‘pushAtBottom’ that receives 2 parameters 'MY_STACK' and the element ‘X’ we need to push at the bottom. 
+The working of this function is explained below:
+  -> Base Case :
+      -> If 'MY_STACK' is empty, we push ‘X’ into 'MY_STACK'.
+  -> Recursive calls:
+      -> We initialize and an integer variable says ‘NUM’ with the top element of 'MY_STACK'.
+      -> We pop from 'MY_STACK'.
+      -> We make a recursive call.
+      -> We push ‘NUM’ into 'MY_STACK'.
+      -> Finally, we return 'MY_STACK'.
+      
+Time Complexity
+O(N) where ‘N’ is the size of the given stack/deque ‘MY_STACK’.
+As to insert element ‘X’ we need to iterate over the complete stack/deque ‘MY_STACK’.
+
+Space Complexity
+O(N) where ‘N’ is the size of the given stack/deque ‘MY_STACK’.
+
+This is the space used by the recursion stack to make ‘N’ calls in the worst case.
+
+/*
+    Time Complexity : O(N)
+    Space Complexity: O(N)
+
+    Where 'N' is the size of the given stack MY_STACK.      
+*/
+
+import java.util.Stack;
+
+public class Solution
+{
+	public static Stack<Integer> pushAtBottom(Stack<Integer> myStack, int x)
+	{
+		// Base Case
+		if (myStack.empty())
+		{
+			myStack.push(x);
+			return myStack;
+		}
+
+		// Store top element in 'num'
+		int num = myStack.peek();
+
+		// Pop the top element
+		myStack.pop();
+
+		// Recursive call
+		pushAtBottom(myStack, x);
+
+		// Add 'num' to stack
+		myStack.push(num);
+
+		return myStack;
+	}
+}
+
+
+=============================================================
+
+static void insert_at_bottom(char x){
+
+    if(st.isEmpty())
+        st.push(x);
+
+    else{
+        /* All items are held in Function Call Stack until we
+           reach end of the stack. When the stack becomes
+           empty, the st.size() becomes 0, the
+           above if part is executed and the item is inserted
+           at the bottom */
+
+        char a = st.peek();
+        st.pop();
+        insert_at_bottom(x);
+
+        //push all the items held in Function Call Stack
+        //once the item is inserted at the bottom
+        st.push(a);
+    }
+}
+
