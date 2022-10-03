@@ -1,0 +1,241 @@
+Given a Queue Q containing N elements. The task is to reverse the Queue. Your task is to complete the function rev(), that reverses the N elements of the queue.
+
+Example 1:
+
+Input:
+6
+4 3 1 10 2 6
+
+Output: 
+6 2 10 1 3 4
+
+Explanation: 
+After reversing the given
+elements of the queue , the resultant
+queue will be 6 2 10 1 3 4.
+Example 2:
+
+Input:
+4
+4 3 2 1 
+
+Output: 
+1 2 3 4
+
+Explanation: 
+After reversing the given
+elements of the queue , the resultant
+queue will be 1 2 3 4.
+Your Task:
+ You only need to complete the function rev that takes a queue as parameter and returns the reversed queue. The printing is done automatically by the driver code.
+
+Expected Time Complexity : O(n)
+Expected Auxilliary Space : O(n)
+
+Constraints:
+1 ≤ N ≤ 105
+1 ≤ elements of Queue ≤ 105
+
+MY_SOLUTION
+
+class GfG{
+    //Function to reverse the queue.
+    public Queue<Integer> rev(Queue<Integer> q)
+    {
+        //using a stack to reverse the queue.
+        Stack<Integer> s=new Stack<>();
+       
+        //pushing elements from queue into stack and removing them from queue.
+        while(!q.isEmpty()){
+            int x=q.peek();
+            q.poll();
+            s.push(x);
+        }
+        
+        //now pushing elements back into the queue from stack and removing them 
+        //from stack. queue gets reversed as stack follows last in first out.
+        while(!s.isEmpty()){
+            int x=s.peek();
+            s.pop();
+            q.add(x);
+        }
+        //returning reversed queue.
+        return q;
+    }
+}
+
+=======================================================================================
+
+class GfG{
+    //Function to reverse the queue.
+    public Queue<Integer> rev(Queue<Integer> q){
+        
+        // USING RECURSION
+        
+        if (q.size() > 0){
+            // storing front(first element) of queue
+            int fr = q.peek();
+     
+            // removing front
+            q.poll();
+         
+            // asking recursion to reverse the
+            // leftover queue
+            rev(q);
+         
+            // placing first element
+            // at its correct position
+            q.offer(fr);
+        }
+        return q;
+        
+        
+    }
+}
+
+======================================================================================
+
+Reversing a Queue using stack:
+For reversing the queue one approach could be to store the elements of the queue in a temporary data structure in a manner such that if we re-insert the elements 
+in the queue they would get inserted in reverse order. So now our task is to choose such a data structure that can serve the purpose. 
+According to the approach, the data structure should have the property of ‘LIFO’ as the last element to be inserted in the data structure should actually be the
+first element of the reversed queue. 
+
+Follow the below steps to implement the idea:
+
+-> Pop the elements from the queue and insert into the stack now topmost element of the stack is the last element of the queue.
+-> Pop the elements of the stack to insert back into the queue the last element is the first one to be inserted into the queue.
+
+Below is the implementation of above approach:
+
+
+// Java program to reverse a Queue
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Stack;
+ 
+// Java program to reverse a queue
+public class Queue_reverse {
+ 
+    static Queue<Integer> queue;
+ 
+    // Utility function to print the queue
+    static void Print()
+    {
+        while (!queue.isEmpty()) {
+            System.out.print(queue.peek() + ", ");
+            queue.remove();
+        }
+    }
+ 
+    // Function to reverse the queue
+    static void reversequeue()
+    {
+        Stack<Integer> stack = new Stack<>();
+        while (!queue.isEmpty()) {
+            stack.add(queue.peek());
+            queue.remove();
+        }
+        while (!stack.isEmpty()) {
+            queue.add(stack.peek());
+            stack.pop();
+        }
+    }
+ 
+    // Driver code
+    public static void main(String args[])
+    {
+        queue = new LinkedList<Integer>();
+        queue.add(10);
+        queue.add(20);
+        queue.add(30);
+        queue.add(40);
+        queue.add(50);
+        queue.add(60);
+        queue.add(70);
+        queue.add(80);
+        queue.add(90);
+        queue.add(100);
+ 
+        reversequeue();
+        Print();
+    }
+}
+Output
+100 90 80 70 60 50 40 30 20 10 
+Time Complexity: O(N), As we need to insert all the elements in the stack and later to the queue.
+Auxiliary Space: O(N), Use of stack to store values. 
+
+================================================================================
+
+Reversing a Queue using recursion: 
+Instead of explicitly using stack goal can be achieved using recursion (recursion at backend will itself maintain stack).
+
+Follow the below steps to implement the idea:
+
+Recursively perform the following steps:
+
+-> If the queue size is 0 return.
+-> Else pop and store the front element and recur for remaining queue.
+-> push the current element in the queue.
+
+Below is the implementation of above approach:
+
+
+// CPP program to reverse a Queue
+#include <bits/stdc++.h>
+using namespace std;
+ 
+// Utility function to print the queue
+void Print(queue<int>& Queue)
+{
+    while (!Queue.empty()) {
+        cout << Queue.front() << " ";
+        Queue.pop();
+    }
+}
+ 
+// Function to reverse the queue
+void reverseQueue(queue<int>& q)
+{
+    // base case
+    if (q.size() == 0)
+        return;
+    // storing front(first element) of queue
+    int fr = q.front();
+ 
+    // removing front
+    q.pop();
+ 
+    // asking recursion to reverse the
+    // leftover queue
+    reverseQueue(q);
+ 
+    // placing first element
+    // at its correct position
+    q.push(fr);
+}
+ 
+// Driver code
+int main()
+{
+    queue<int> Queue;
+    Queue.push(10);
+    Queue.push(20);
+    Queue.push(30);
+    Queue.push(40);
+    Queue.push(50);
+    Queue.push(60);
+    Queue.push(70);
+    Queue.push(80);
+    Queue.push(90);
+    Queue.push(100);
+ 
+    reverseQueue(Queue);
+    Print(Queue);
+}
+Output
+100 90 80 70 60 50 40 30 20 10 
+Time Complexity: O(N). 
+Auxiliary Space: O(N). The recursion stack contains all elements of queue at a moment. 
+
